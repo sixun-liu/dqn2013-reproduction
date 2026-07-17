@@ -1,0 +1,28 @@
+schema_version: 3
+project_id: dqn2013-breakout-reproduction
+updated_at: '2026-07-17T03:57:38Z'
+language: zh-CN
+stage: reproduction
+north_star: 理解2013 DQN，并在现代可审计环境中复现Breakout的学习趋势。
+primary_problem: 解释DQN评估先升后退且远低于论文量级的证据缺口，优先核对历史协议而不是直接重跑。
+active_experiment_id: null
+active_candidate: null
+canonical_baseline:
+  id: DQN2013-BREAKOUT-INDEPENDENT
+  name: 2013-style DQN Breakout independent reimplementation
+  repo_commit: fe8d8a03c41a7ef5b523e2e354bd01c363e786bb
+  config: src/dqn2013_breakout.py sha256=77aa269cd39888ebae4b0c256a120056141f96978284428801f2493e23ee62c0; 2.5M decisions; repeat4; online target; RMSProp; seed0
+  evaluation_protocol: 每250K decisions用epsilon=.05评估10K decisions；与论文random=1.2, average=168, best=225分层比较。
+parked_lanes: []
+stage_exit_gates:
+- 用户人工复核EXP-0001双尺度曲线并记录确认
+- 核对2013 frame、RMSProp和evaluation语义
+- 决定是否做协议重复或明确标注的target-network机制对照
+canonical_repo:
+  path: /root/autodl-tmp/third_party/cleanrl
+  branch: master
+  commit: fe8d8a03c41a7ef5b523e2e354bd01c363e786bb
+  tracked_clean_at_snapshot: true
+human_review:
+  root: /root/autodl-tmp/artifacts/dqn2013/review
+  latest: /root/autodl-tmp/artifacts/dqn2013/review/LATEST.md

@@ -1,0 +1,50 @@
+{
+  "action_repeat": 4,
+  "batch_size": 32,
+  "checkpoint_every": 250000,
+  "cuda": true,
+  "end_epsilon": 0.1,
+  "env_id": "BreakoutNoFrameskip-v4",
+  "eval_epsilon": 0.05,
+  "eval_every": 250000,
+  "eval_steps": 10000,
+  "exploration_steps": 1000000,
+  "fixed_eval_seed": 20000,
+  "gamma": 0.99,
+  "learning_rate": 0.00025,
+  "learning_starts": 50000,
+  "log_every": 1000,
+  "noop_max": 30,
+  "output_dir": "/root/autodl-tmp/runs/dqn2013_unitfix_1p5m_s0_0717",
+  "preserve_checkpoints": true,
+  "replay_size": 1000000,
+  "resume_model": "",
+  "rmsprop_alpha": 0.95,
+  "rmsprop_eps": 0.01,
+  "seed": 0,
+  "source": "/root/autodl-tmp/dqn-reproduction/src/dqn2013_breakout_instrumented.py",
+  "source_sha256": "b8bea12b77434f59e69a80f974269b56d5ee88fa89d00dc930c81f6578e16f6a",
+  "base_source": "/root/autodl-tmp/dqn-reproduction/src/dqn2013_breakout.py",
+  "base_source_sha256": "77aa269cd39888ebae4b0c256a120056141f96978284428801f2493e23ee62c0",
+  "start_epsilon": 1.0,
+  "torch_deterministic": true,
+  "total_steps": 1500000,
+  "train_frequency": 1,
+  "unit_correction": {
+    "exploration_steps_old": 250000,
+    "replay_size_old": 250000,
+    "rationale": "Interpret paper replay/epsilon 1M frames as agent time-steps rather than raw emulator frames."
+  },
+  "executor_parity": {
+    "model_exact_equal": true,
+    "optimizer_exact_equal": true,
+    "steps": 2000,
+    "max_abs_diff": 0.0
+  },
+  "preregistered_readout": {
+    "historical_legacy_eval_mean_at_1500000": 2.511627906976744,
+    "historical_q_mean_max_in_1450000_to_1500000": 61.739990234375,
+    "support_unit_correction": "window q_mean max < 20 and legacy-seed final eval mean >= 5",
+    "units_not_sufficient": "window q_mean max >= 20 or legacy-seed final eval mean <= 3"
+  }
+}

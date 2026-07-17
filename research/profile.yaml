@@ -1,0 +1,13 @@
+schema_version: 1
+domain: paper-reproduction
+primary_metrics:
+- epsilon=.05 evaluation mean return
+tail_metrics:
+- TD/Q 数值稳定性和失败episode尾部
+forbidden_inputs:
+- 不得把CleanRL 2015结果当作2013论文真值
+- 不得用单seed宣称整篇复现
+promotion_gates:
+- 单seed最多promising_unresolved
+review_requirements:
+- 用户查看训练与评估曲线

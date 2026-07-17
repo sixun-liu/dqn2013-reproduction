@@ -1,0 +1,27 @@
+{
+  "checkpoint": "/root/autodl-tmp/runs/dqn2013_breakout_s0_0717/checkpoint_latest.pt",
+  "checkpoint_sha256": "7a3455ffec7f5fa7d6dc7919b9402a8b226edeafcc6cd5bda464e48dd5fc0015",
+  "checkpoint_step": 2500000,
+  "device": "cuda",
+  "eval_epsilon": 0.05,
+  "eval_steps_per_seed": 10000,
+  "evaluator": "/root/autodl-tmp/dqn-reproduction/scripts/evaluate_dqn2013_checkpoint.py",
+  "evaluator_sha256": "41d57fc77cc10e8201d0d398582eb96514f046961e6ac99bcff5a24ded138f1c",
+  "output_dir": "/root/autodl-tmp/artifacts/dqn2013/EXP-0002",
+  "preregistered_readout": {
+    "robust_low_policy": "median seed mean < 5 and at least 8 of 10 seed means < 7",
+    "seed_sensitive": "at least 3 of 10 seed means >= 7"
+  },
+  "seeds": [
+    20000,
+    20001,
+    20002,
+    20003,
+    20004,
+    20005,
+    20006,
+    20007,
+    20008,
+    20009
+  ]
+}

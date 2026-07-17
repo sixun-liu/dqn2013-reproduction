@@ -1,0 +1,35 @@
+# Python and notebook caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Local environments and secrets
+.env
+.env.*
+.venv/
+venv/
+
+# Mutable collaborator inboxes
+docs_from_claude/
+staging/
+
+# Runtime outputs and large artifacts
+runs/
+artifacts/
+outputs/
+checkpoints/
+*.ckpt
+*.pt
+*.pth
+*.pdf
+*.zip
+*.tar
+*.tar.gz
+*.log
+
+# Local tooling
+.DS_Store
+
