@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-07-17T05:43:36Z
+> Updated: 2026-07-17T05:47:34Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -75,3 +75,12 @@
 - Next: 下一 formal run 从 clean control commit 和固定 third-party commits 预注册、冻结。
 - Approval: user
 - Git: workflow `f3a120e` (`v0.2.0`)
+
+### 2026-07-17T05:47:34Z | workflow | human-review-status-fix
+
+- Actor: codex
+- Summary: pending human review 继续保留 strict warning，但不再被误报为需要修复的审计损坏。
+- Evidence: workflow 15/15 tests; `researchctl status`
+- Next: 下一控制动作直接指向最早 pending review。
+- Approval: user
+- Git: workflow `ffc2d66` (`v0.2.1`)
