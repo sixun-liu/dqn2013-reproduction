@@ -1,6 +1,8 @@
-schema_version: 3
+schema_version: 4
 project_id: dqn2013-breakout-reproduction
-updated_at: '2026-07-17T03:57:38Z'
+updated_at: '2026-07-17T05:43:36Z'
+updated_by: codex
+approved_by: user
 language: zh-CN
 stage: reproduction
 north_star: 理解2013 DQN，并在现代可审计环境中复现Breakout的学习趋势。
@@ -18,6 +20,7 @@ stage_exit_gates:
 - 用户人工复核EXP-0001双尺度曲线并记录确认
 - 核对2013 frame、RMSProp和evaluation语义
 - 决定是否做协议重复或明确标注的target-network机制对照
+repository_manifest: research/repositories.yaml
 canonical_repo:
   path: /root/autodl-tmp/third_party/cleanrl
   branch: master

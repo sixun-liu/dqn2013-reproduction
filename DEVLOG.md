@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-07-17T05:31:57Z
+> Updated: 2026-07-17T05:43:36Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -66,3 +66,12 @@
 - Next: 只在方向变化、持久决策或正式结案时更新相应人读视图。
 - Approval: user
 - Git: workflow `3a5bd50` (`v0.1.1`)
+
+### 2026-07-17T05:43:36Z | workflow | multi-repo-provenance
+
+- Actor: codex
+- Summary: 项目采用 schema 2 repository manifest；未来 new/freeze 自动快照 control/runtime/workflow 与三个 third-party 仓。
+- Evidence: `research/repositories.yaml`, workflow multi-repo regression tests
+- Next: 下一 formal run 从 clean control commit 和固定 third-party commits 预注册、冻结。
+- Approval: user
+- Git: workflow `f3a120e` (`v0.2.0`)

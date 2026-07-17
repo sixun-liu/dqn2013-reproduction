@@ -1,43 +1,49 @@
-schema_version: 1
-updated_at: '2026-07-17T05:04:25Z'
-roles:
+schema_version: 2
+updated_at: '2026-07-17T05:43:36Z'
+repositories:
   control:
     path: /root/autodl-tmp/dqn-reproduction
     remote: https://github.com/sixun-liu/dqn2013-reproduction.git
-    branch: main
     commit_source: git-rev-parse-head
+    required_clean: true
   runtime:
     kind: independent-reimplementation
     path: /root/autodl-tmp/dqn-reproduction/src
     commit_source: control-repo-head
+    required_clean: true
     historical_source_hashes:
       exp_0001: 77aa269cd39888ebae4b0c256a120056141f96978284428801f2493e23ee62c0
       exp_0003: b8bea12b77434f59e69a80f974269b56d5ee88fa89d00dc930c81f6578e16f6a
   workflow:
     path: /root/autodl-tmp/research-agent-kit
     remote: https://github.com/sixun-liu/research-agent-kit.git
-    commit: 3a5bd50
-    version: v0.1.1
-  third_party:
-    cleanrl:
-      path: /root/autodl-tmp/third_party/cleanrl
-      remote: https://github.com/vwxyzjn/cleanrl.git
-      commit: fe8d8a03c41a7ef5b523e2e354bd01c363e786bb
-      license: MIT
-    deep_q_rl:
-      path: /root/autodl-tmp/third_party/deep_q_rl
-      remote: https://github.com/spragunr/deep_q_rl.git
-      commit: 34202491f5d8c219f52410d19cd0e91d44c37ecc
-      license: BSD-3-Clause
-    deepmind_dqn:
-      path: /root/autodl-tmp/third_party/deepmind-dqn
-      remote: https://github.com/google-deepmind/dqn.git
-      commit: 9d9b1d13a2b491d6ebd4d046740c511c662bbe0f
-      license: limited-academic-review
-  artifact_store:
-    runs_root: /root/autodl-tmp/runs
-    artifacts_root: /root/autodl-tmp/artifacts/dqn2013
-  primary_source:
-    paper_path: /root/autodl-tmp/papers/dqn_1312.5602.pdf
-    paper_sha256: 8db04120cace173151c77e0faa6f3eaa4207009da66b9417597dc70bfee56d9c
+    commit: f3a120e5ce6d3037af7b378ed0eede4e6da1ba17
+    version: v0.2.0
+    required_clean: true
+third_party:
+  cleanrl:
+    path: /root/autodl-tmp/third_party/cleanrl
+    remote: https://github.com/vwxyzjn/cleanrl.git
+    commit: fe8d8a03c41a7ef5b523e2e354bd01c363e786bb
+    license: MIT
+    required_clean: true
+  deep_q_rl:
+    path: /root/autodl-tmp/third_party/deep_q_rl
+    remote: https://github.com/spragunr/deep_q_rl.git
+    commit: 34202491f5d8c219f52410d19cd0e91d44c37ecc
+    license: BSD-3-Clause
+    required_clean: true
+  deepmind_dqn:
+    path: /root/autodl-tmp/third_party/deepmind-dqn
+    remote: https://github.com/google-deepmind/dqn.git
+    commit: 9d9b1d13a2b491d6ebd4d046740c511c662bbe0f
+    license: limited-academic-review
+    required_clean: true
+stores:
+  runs: /root/autodl-tmp/runs
+  artifacts: /root/autodl-tmp/artifacts/dqn2013
+sources:
+  paper:
+    path: /root/autodl-tmp/papers/dqn_1312.5602.pdf
+    sha256: 8db04120cace173151c77e0faa6f3eaa4207009da66b9417597dc70bfee56d9c
     tracked: false
