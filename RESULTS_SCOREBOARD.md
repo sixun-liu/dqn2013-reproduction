@@ -1,5 +1,9 @@
 # RESULTS_SCOREBOARD
 
+> Updated: 2026-07-17T05:26:23Z
+> Maintainer: codex
+> Source of truth: research/experiments.jsonl and research/artifacts.jsonl
+
 | Run | Budget | Train return | Eval return | Verdict |
 |---|---:|---:|---:|---|
 | `EXP-0001` / seed 0 | 10M emulator frames | final rolling-20 7.9；p99.5 23 | peak 10.90 @ 9M；final 2.21；paper average 168 | `promising_unresolved`；数值未复现 |

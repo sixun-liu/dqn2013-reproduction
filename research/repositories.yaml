@@ -16,8 +16,8 @@ roles:
   workflow:
     path: /root/autodl-tmp/research-agent-kit
     remote: https://github.com/sixun-liu/research-agent-kit.git
-    commit: e656c16
-    version: v0.1.0
+    commit: 3a5bd50
+    version: v0.1.1
   third_party:
     cleanrl:
       path: /root/autodl-tmp/third_party/cleanrl
@@ -41,4 +41,3 @@ roles:
     paper_path: /root/autodl-tmp/papers/dqn_1312.5602.pdf
     paper_sha256: 8db04120cace173151c77e0faa6f3eaa4207009da66b9417597dc70bfee56d9c
     tracked: false
-
