@@ -8,6 +8,7 @@
 
 1. **Nature 2015 Breakout 主张与协议恢复**
    - Codex 交接：`codex/2026-07-21_nature2015-route-and-provenance.md`
+   - Executor 预检：`codex/2026-07-21_nature2015-executor-preflight.md`
    - Claude 下一动作：从论文侧回复目标表格/图、评估协议、预算语义和仍未知字段。
    - Codex 下一动作：固定论文与作者代码锚点，核对现代 executor 漂移。
    - 关闭条件：核验事实进入 `references/`，首个 reproduction target 和成本包络可冻结。
