@@ -1,8 +1,8 @@
-# 2013 DQN Breakout 部分复现
+# DQN 2013 到 Nature 2015 Breakout 部分复现
 
-本项目以 Mnih et al. 2013《Playing Atari with Deep Reinforcement Learning》为目标，选择
-Breakout 做单任务、单 seed 的理解与部分复现。论文报告平均分 168、best 225，但现代 ALE、
-启动随机化和 frame 计数存在不可消除的历史漂移，因此先检验训练趋势，不承诺逐分对齐。
+本项目以 Breakout 为单任务线索，研究 DQN 从 2013 arXiv 版本到 Nature 2015 版本的稳定性演进，
+并分别保留单 seed 部分复现证据。2013 论文报告平均分 168、best 225；当前 Nature 主线参考
+Extended Data Table 3 的 316.8。现代 ALE、启动随机化和预算语义存在历史漂移，因此不承诺逐分对齐。
 
 本仓是复现 control repo，也跟踪独立实现和分析脚本。第三方代码、大型 run、checkpoint、ROM、
 论文 PDF 和完整 artifact 均在 Git 外，通过 `research/repositories.yaml`、commit 和 hash 关联。
@@ -55,3 +55,11 @@ researchctl status
 researchctl audit --strict
 researchctl hygiene
 ```
+
+## Nature 2015 执行器
+
+当前主线以 Nature 2015 Extended Data Table 3 的 Breakout `316.8` 为参考，冻结预算为 10M agent
+decisions（40M nominal emulator frames）。`src/dqn2015_nature_breakout.py` 是基于 CleanRL MIT 工程
+结构编写的独立 PyTorch executor；DeepMind DQN 3.0 只作协议 oracle，未复制其受限许可源码。
+CleanRL attribution 与许可见 `LICENSES/CleanRL-MIT.txt`；完整协议和不可比边界见
+`references/NATURE2015_PROTOCOL_AUDIT.md`。

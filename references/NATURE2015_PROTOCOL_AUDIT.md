@@ -28,9 +28,10 @@ Nature 论文 Extended Data Table 3 在 Breakout 上报告：使用 replay 与 t
 - 论文称完整训练为 50M `frames`，并称其约等于 38 天游戏经验。60 Hz 下 38 天约为 197M
   emulator frames，与 action repeat 4 后的 **50M agent decisions = 200M emulator frames** 一致。
 - A1 `run_gpu` 设置 `steps=50000000`、`actrep=4`；训练循环每次环境决策令 `step` 加一，并打印
-  `frames=step*actrep`。A1 的 epsilon 终点 `eps_endt=1000000` 也由同一 decision 计数器消费。
+  `frames=step*actrep`。A1 的 epsilon 终点 `eps_endt=1000000` 也由同一 decision 计数器消费，且
+  从 replay warmup 结束后开始退火。
 - 因而 Table 3 的 10M 预算在本项目冻结为 **10M agent decisions = 40M emulator frames**，不是
-  2.5M decisions。训练 epsilon 在前 1M agent decisions 从 1.0 线性退火到 0.1。
+  2.5M decisions。训练 epsilon 在 50K warmup 后的 1M agent decisions 从 1.0 线性退火到 0.1。
 - 所有配置和指标都分别命名 `agent_decisions`、`emulator_frames` 与 `optimizer_updates`；孤立的
   `frames` 不作为预算变量。
 
@@ -47,7 +48,7 @@ Nature 论文 Extended Data Table 3 在 Breakout 上报告：使用 replay 与 t
 | Optimizer | centered RMSProp，lr 2.5e-4；gradient 与 squared-gradient momentum 均 .95；denominator addition/floor .01 | P2 Methods 与 A1 数值语义 |
 | Loss | TD error 在 ±1 外使用常数梯度，即 smooth-L1/Huber delta 1 | P2 Methods；不得替换成 CleanRL 默认 MSE |
 | Rewards | clip 到 [-1, 1] | P2 Methods |
-| Exploration | epsilon 1.0 -> .1 over 1M decisions | P2 表格 + A1 decision 计数器 |
+| Exploration | warmup期间epsilon 1.0；随后在1M decisions内降至.1 | P2 表格 + A1 decision 计数器 |
 | Random start | reset 后至多 30 个 no-op；需要 FIRE 的游戏执行 FIRE reset | P2 / A1；现代 wrapper 行为记录为 drift |
 
 ## 5. 冻结评估协议
