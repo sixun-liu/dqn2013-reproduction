@@ -1,32 +1,31 @@
 schema_version: 4
 project_id: dqn2013-breakout-reproduction
-updated_at: '2026-07-20T16:18:28Z'
+updated_at: '2026-07-20T17:43:06Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
-stage: understanding
-north_star: 理解DQN从2013到Nature 2015的稳定性演进，并在现代可审计环境中跑通Nature 2015 Breakout基线。
-primary_problem: 恢复Nature 2015 Breakout的论文版本、作者代码谱系、现代可执行实现、ALE协议、预算语义、参考结果和成本包络，再冻结首个复现基线。
+stage: reproduction
+north_star: 理解DQN从2013到Nature 2015的稳定性演进，并在现代可审计环境中部分复现Nature 2015 Breakout结果。
+primary_problem: 在冻结的现代ALE独立重实现上完成Nature Extended Data Table 3 Breakout replay+target单seed运行，并量化与316.8参考值的差距。
 active_experiment_id: null
 active_candidate: DQN2015-NATURE-BREAKOUT
 canonical_baseline:
-  id: DQN2013-BREAKOUT-INDEPENDENT
-  name: 2013-style DQN Breakout independent reimplementation
-  repo_commit: fe8d8a03c41a7ef5b523e2e354bd01c363e786bb
-  config: src/dqn2013_breakout.py sha256=77aa269cd39888ebae4b0c256a120056141f96978284428801f2493e23ee62c0; 2.5M decisions; repeat4; online target; RMSProp; seed0
-  evaluation_protocol: 每250K decisions用epsilon=.05评估10K decisions；与论文random=1.2, average=168, best=225分层比较。
+  id: DQN2015-NATURE-BREAKOUT-INDEPENDENT
+  name: Nature 2015 DQN Breakout independent reimplementation
+  repo_commit: 8e5da91673a769e0adddf48a1e86757bd3717731
+  config: 'src/dqn2015_nature_breakout.py@8e5da91 defaults: 10M agent decisions, repeat4, replay1M, target10K, centered RMSProp, seed0'
+  evaluation_protocol: 每250K training decisions以epsilon=.05独立评估135K decisions；只认真实game over，报告完整game mean并取轨迹peak；held-out 500-state mean max-Q为诊断。
 parked_lanes:
-- 2013独立重实现长程扩展；现有EXP-0001至EXP-0003保留为历史与机制证据，不继续烧卡。
+- 2013独立重实现长程扩展和Nature 2x2消融；保留EXP-0001至EXP-0003作为历史上下文。
 stage_exit_gates:
-- 固定Nature 2015论文PDF、DOI、版本、SHA256和目标Breakout结果主张。
-- 完成2013论文、本地实现、DeepMind DQN 3.0与现代执行实现的代码谱系和协议对账。
-- 冻结ALE版本、wrapper栈、agent-step/emulator-frame预算、评估协议和接受包络。
-- 用最小smoke/pilot实测吞吐、显存、磁盘和完整运行ETA，并经用户确认成本。
+- 完成100K至250K pilot并确认10M ETA不超过20小时。
+- 单seed 10M decisions运行产生40个有效周期评估、held-out Q、checkpoint和同坐标审查图，或形成证据充分的停止说明。
+- 观察与解释分离，明确现代ALE、固定学习率和单seed限制，最终裁决不高于promising_unresolved。
 repository_manifest: research/repositories.yaml
 canonical_repo:
   path: /root/autodl-tmp/dqn-reproduction
   branch: main
-  commit: 515a40c189544971792c0611db7709a44880b67e
+  commit: 8e5da91673a769e0adddf48a1e86757bd3717731
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/artifacts/dqn2013/review
@@ -35,7 +34,7 @@ repository_snapshots:
   control:
     repo: /root/autodl-tmp/dqn-reproduction
     branch: main
-    commit: 515a40c189544971792c0611db7709a44880b67e
+    commit: 8e5da91673a769e0adddf48a1e86757bd3717731
     tracked_clean: true
     worktree_clean: true
     untracked_count: 0
@@ -50,7 +49,7 @@ repository_snapshots:
   runtime:
     repo: /root/autodl-tmp/dqn-reproduction
     branch: main
-    commit: 515a40c189544971792c0611db7709a44880b67e
+    commit: 8e5da91673a769e0adddf48a1e86757bd3717731
     tracked_clean: true
     worktree_clean: true
     untracked_count: 0

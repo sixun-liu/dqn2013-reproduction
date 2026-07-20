@@ -1,15 +1,15 @@
 schema_version: 1
 domain: paper-reproduction
 primary_metrics:
-- Nature 2015协议下的Breakout epsilon=.05评估平均回报与论文/参考曲线的距离
+- Nature协议周期评估mean_episode_return及其轨迹peak与316.8参考值的差距
 tail_metrics:
-- Q值、TD误差与训练回报的末段稳定性
+- held-out mean max-Q、TD误差、末段评估与checkpoint完整性
 forbidden_inputs:
 - 不得把本地2013独立重实现称为DeepMind官方或社区原版
 - 不得把CleanRL默认配置或现代ALE分数直接当作Nature 2015论文真值
 - 不得把DeepMind limited-license源码复制进公开控制仓
 - 不得用单seed结果宣称整篇Nature 2015论文复现
 promotion_gates:
-- 论文、代码、环境、预算和评估协议均已冻结，且至少一个Breakout运行进入预注册接受包络
+- 10M单seed完整运行与同坐标图只可支持promising_unresolved；更强主张需要协议等价、多seed和学习率选择证据。
 review_requirements:
-- 用户查看与参考同坐标的曲线、协议差异表和成本账
+- 用户查看与316.8同坐标曲线、held-out Q和协议差异表
