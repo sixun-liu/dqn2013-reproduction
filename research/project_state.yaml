@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dqn2013-breakout-reproduction
-updated_at: '2026-07-20T17:44:20Z'
+updated_at: '2026-07-20T17:47:22Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -25,7 +25,7 @@ repository_manifest: research/repositories.yaml
 canonical_repo:
   path: /root/autodl-tmp/dqn-reproduction
   branch: main
-  commit: 8e5da91673a769e0adddf48a1e86757bd3717731
+  commit: d1234d94c106c87d61c6baa3a090a38802a7df76
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/artifacts/dqn2013/review
