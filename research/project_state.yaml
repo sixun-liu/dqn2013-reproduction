@@ -1,13 +1,13 @@
 schema_version: 4
 project_id: dqn2013-breakout-reproduction
-updated_at: '2026-07-20T17:43:06Z'
+updated_at: '2026-07-20T17:44:20Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
 stage: reproduction
 north_star: 理解DQN从2013到Nature 2015的稳定性演进，并在现代可审计环境中部分复现Nature 2015 Breakout结果。
 primary_problem: 在冻结的现代ALE独立重实现上完成Nature Extended Data Table 3 Breakout replay+target单seed运行，并量化与316.8参考值的差距。
-active_experiment_id: null
+active_experiment_id: EXP-0004
 active_candidate: DQN2015-NATURE-BREAKOUT
 canonical_baseline:
   id: DQN2015-NATURE-BREAKOUT-INDEPENDENT

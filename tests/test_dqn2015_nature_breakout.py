@@ -2,6 +2,7 @@ import dataclasses
 import json
 import signal
 import unittest
+from pathlib import Path
 
 import torch
 
@@ -22,6 +23,19 @@ from src.dqn2015_nature_breakout import (
 
 
 class NatureDQNUnitTests(unittest.TestCase):
+    def test_committed_configs_expand_all_executor_fields(self):
+        repo_root = Path(__file__).resolve().parents[1]
+        defaults = dataclasses.asdict(Args())
+        pilot = json.loads((repo_root / "configs/nature2015_table3_s0_pilot_250k.json").read_text())
+        formal = json.loads((repo_root / "configs/nature2015_table3_s0_formal_10m.json").read_text())
+        self.assertEqual(set(pilot), set(defaults))
+        self.assertEqual(set(formal), set(defaults))
+        for key in defaults:
+            if key not in {"output_dir", "total_agent_decisions"}:
+                self.assertEqual(pilot[key], formal[key], key)
+        self.assertEqual(pilot["total_agent_decisions"], 250_000)
+        self.assertEqual(formal["total_agent_decisions"], 10_000_000)
+
     def test_network_shape_and_parameter_count(self):
         network = QNetwork(action_count=4)
         output = network(torch.zeros(2, 4, 84, 84, dtype=torch.uint8))
