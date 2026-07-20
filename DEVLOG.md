@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-07-17T05:47:34Z
+> Updated: 2026-07-20T16:18:38Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -84,3 +84,15 @@
 - Next: 下一控制动作直接指向最早 pending review。
 - Approval: user
 - Git: workflow `ffc2d66` (`v0.2.1`)
+
+## 2026-07-20
+
+### 2026-07-20T16:18:38Z | decision | nature-2015-route
+
+- Actor: user, codex
+- Summary: 2013 独立重实现保留现有趋势与单位修正证据，不再投入长程扩展；Nature 2015
+  Breakout 升为当前主线，并先退回 understanding 完成论文、代码、ALE、评估和成本对账。
+- Evidence: EXP-0001--EXP-0003；DeepMind DQN 3.0 `9d9b1d1`；实现谱系审计。
+- Next: 选择现代 executor 并冻结 Nature 2015 claim-protocol 后，只运行最小 smoke/pilot。
+- Approval: user
+- Git: control@`515a40c` before transition; workflow@`ffc2d66` (`v0.2.1`)

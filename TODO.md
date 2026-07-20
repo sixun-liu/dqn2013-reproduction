@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-07-17T05:26:23Z
+> Updated: 2026-07-20T16:18:38Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,10 +8,12 @@
 
 ## Now
 
-- [ ] [user] 复核 `EXP-0001` 与 `EXP-0003` 图；trigger: 打开 review 入口。
-- [ ] [codex] 登记人工复核并修复 pending 状态；trigger: 用户返回确认或异议。
+- [ ] [claude] 提交 Nature 2015 Breakout 主张、评估协议和论文锚点；trigger: 读取 `discussion/INDEX.md`。
+- [ ] [codex] 固定 Nature 论文、更新实现 ledger，并完成四方协议对账；trigger: discussion 入口建立。
+- [ ] [codex] 选定现代 executor 候选并写最小 smoke/pilot 成本卡；trigger: 协议差异可枚举。
+- [ ] [user] 复核 `EXP-0001` 与 `EXP-0003` 图；trigger: 打开既有 review 入口。
 
 ## Waiting
 
-- [ ] [codex] 预注册约 5M-update 长程基线或明确停止；trigger: 用户完成证据复核并确认投入。
-- NIPS optimizer/gamma 与 2015 target network 保持 parked。
+- [ ] [codex] 创建 Nature replication 卡并启动 smoke/pilot；trigger: 论文、executor、协议和接受包络冻结。
+- [ ] [user] 批准正式运行成本；trigger: pilot 给出实测 ETA、显存和磁盘增长。

@@ -1,6 +1,6 @@
 # CURRENT_STATE
 
-> Updated: 2026-07-17T05:26:23Z
+> Updated: 2026-07-20T16:18:38Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml and research/experiments.jsonl
 
@@ -8,17 +8,18 @@
 
 ## 一句话判断
 
-`EXP-0003` 已自然完成并通过预注册支持门槛：只修正 replay/epsilon agent-step 单位后，首次
-退化窗口的 Q mean max 从 61.74 降至 3.72，配对终点评估从 2.51 提高到 10.04。单位缩短是
-EXP-0001 首次失稳的重要促成因素，但单 seed 结果不构成论文 168 分的数值复现。
+2013 独立重实现已经给出学习趋势和单位修正的稳定性证据，但其代码谱系与历史协议风险不适合继续
+承担主要复现预算。用户已决定把 Nature 2015 Breakout 升为当前候选，2013 长程扩展停止在现有
+`promising_unresolved` 证据处。
 
 ## 当前主要矛盾
 
-已排除“最终低分只是单一评估 seed 偶然”，并取得 replay/epsilon 联合单位修正的正向干预证据。
-剩余差距是修正后的稳定性尚未覆盖 Figure 2 约 5M updates，且现代 ALE/独立重写与历史协议仍有漂移。
+DeepMind DQN 3.0 提供 Nature 2015 作者代码和较强协议锚点，但 Lua/Torch7/Xitari 栈不适合作为
+当前 GPU 的直接执行起点；CleanRL 可现代运行，却在优化器、预算、epsilon、target 更新和 wrapper
+等方面偏离作者配置。正式计算前必须先冻结论文主张、执行实现、ALE 协议与成本包络。
 
 ## 下一项决策
 
-先由用户复核 `artifacts/dqn2013/review/LATEST.md`。若继续投入 DQN 计算，下一正式候选应从头运行
-协议对齐的约 5M-update 单 seed 基线，检验长期稳定与论文尺度；在这项证据前不测试
-NIPS optimizer/gamma，也不加入 2015 target network。
+完成 Nature 2015 的 claim-protocol 对账并选择一个许可清楚、协议可配置的现代 executor；随后只跑
+最小 smoke/pilot 实测 ETA，由用户确认成本后再冻结首个 replication。2013 的两项 pending human
+review 继续保留，但不再作为 Nature 协议恢复的阻塞项。

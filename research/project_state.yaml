@@ -1,31 +1,124 @@
 schema_version: 4
 project_id: dqn2013-breakout-reproduction
-updated_at: '2026-07-17T05:47:34Z'
+updated_at: '2026-07-20T16:18:28Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
-stage: reproduction
-north_star: 理解2013 DQN，并在现代可审计环境中复现Breakout的学习趋势。
-primary_problem: 解释DQN评估先升后退且远低于论文量级的证据缺口，优先核对历史协议而不是直接重跑。
+stage: understanding
+north_star: 理解DQN从2013到Nature 2015的稳定性演进，并在现代可审计环境中跑通Nature 2015 Breakout基线。
+primary_problem: 恢复Nature 2015 Breakout的论文版本、作者代码谱系、现代可执行实现、ALE协议、预算语义、参考结果和成本包络，再冻结首个复现基线。
 active_experiment_id: null
-active_candidate: null
+active_candidate: DQN2015-NATURE-BREAKOUT
 canonical_baseline:
   id: DQN2013-BREAKOUT-INDEPENDENT
   name: 2013-style DQN Breakout independent reimplementation
   repo_commit: fe8d8a03c41a7ef5b523e2e354bd01c363e786bb
   config: src/dqn2013_breakout.py sha256=77aa269cd39888ebae4b0c256a120056141f96978284428801f2493e23ee62c0; 2.5M decisions; repeat4; online target; RMSProp; seed0
   evaluation_protocol: 每250K decisions用epsilon=.05评估10K decisions；与论文random=1.2, average=168, best=225分层比较。
-parked_lanes: []
+parked_lanes:
+- 2013独立重实现长程扩展；现有EXP-0001至EXP-0003保留为历史与机制证据，不继续烧卡。
 stage_exit_gates:
-- 用户人工复核EXP-0001双尺度曲线并记录确认
-- 核对2013 frame、RMSProp和evaluation语义
-- 决定是否做协议重复或明确标注的target-network机制对照
+- 固定Nature 2015论文PDF、DOI、版本、SHA256和目标Breakout结果主张。
+- 完成2013论文、本地实现、DeepMind DQN 3.0与现代执行实现的代码谱系和协议对账。
+- 冻结ALE版本、wrapper栈、agent-step/emulator-frame预算、评估协议和接受包络。
+- 用最小smoke/pilot实测吞吐、显存、磁盘和完整运行ETA，并经用户确认成本。
 repository_manifest: research/repositories.yaml
 canonical_repo:
-  path: /root/autodl-tmp/third_party/cleanrl
-  branch: master
-  commit: fe8d8a03c41a7ef5b523e2e354bd01c363e786bb
+  path: /root/autodl-tmp/dqn-reproduction
+  branch: main
+  commit: 515a40c189544971792c0611db7709a44880b67e
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/artifacts/dqn2013/review
   latest: /root/autodl-tmp/artifacts/dqn2013/review/LATEST.md
+repository_snapshots:
+  control:
+    repo: /root/autodl-tmp/dqn-reproduction
+    branch: main
+    commit: 515a40c189544971792c0611db7709a44880b67e
+    tracked_clean: true
+    worktree_clean: true
+    untracked_count: 0
+    remote: https://github.com/sixun-liu/dqn2013-reproduction.git
+    role: control
+    declared_path: /root/autodl-tmp/dqn-reproduction
+    declared_remote: https://github.com/sixun-liu/dqn2013-reproduction.git
+    expected_commit: null
+    commit_matches_manifest: true
+    required_clean: true
+    version: null
+  runtime:
+    repo: /root/autodl-tmp/dqn-reproduction
+    branch: main
+    commit: 515a40c189544971792c0611db7709a44880b67e
+    tracked_clean: true
+    worktree_clean: true
+    untracked_count: 0
+    remote: https://github.com/sixun-liu/dqn2013-reproduction.git
+    role: runtime
+    declared_path: /root/autodl-tmp/dqn-reproduction/src
+    declared_remote: null
+    expected_commit: null
+    commit_matches_manifest: true
+    required_clean: true
+    version: null
+  workflow:
+    repo: /root/autodl-tmp/research-agent-kit
+    branch: main
+    commit: ffc2d665b477d7be0d20ec230aeb6f828552ed82
+    tracked_clean: true
+    worktree_clean: true
+    untracked_count: 0
+    remote: https://github.com/sixun-liu/research-agent-kit.git
+    role: workflow
+    declared_path: /root/autodl-tmp/research-agent-kit
+    declared_remote: https://github.com/sixun-liu/research-agent-kit.git
+    expected_commit: ffc2d665b477d7be0d20ec230aeb6f828552ed82
+    commit_matches_manifest: true
+    required_clean: true
+    version: v0.2.1
+  third_party/cleanrl:
+    repo: /root/autodl-tmp/third_party/cleanrl
+    branch: master
+    commit: fe8d8a03c41a7ef5b523e2e354bd01c363e786bb
+    tracked_clean: true
+    worktree_clean: true
+    untracked_count: 0
+    remote: https://github.com/vwxyzjn/cleanrl.git
+    role: third_party/cleanrl
+    declared_path: /root/autodl-tmp/third_party/cleanrl
+    declared_remote: https://github.com/vwxyzjn/cleanrl.git
+    expected_commit: fe8d8a03c41a7ef5b523e2e354bd01c363e786bb
+    commit_matches_manifest: true
+    required_clean: true
+    version: null
+  third_party/deep_q_rl:
+    repo: /root/autodl-tmp/third_party/deep_q_rl
+    branch: master
+    commit: 34202491f5d8c219f52410d19cd0e91d44c37ecc
+    tracked_clean: true
+    worktree_clean: true
+    untracked_count: 0
+    remote: https://github.com/spragunr/deep_q_rl.git
+    role: third_party/deep_q_rl
+    declared_path: /root/autodl-tmp/third_party/deep_q_rl
+    declared_remote: https://github.com/spragunr/deep_q_rl.git
+    expected_commit: 34202491f5d8c219f52410d19cd0e91d44c37ecc
+    commit_matches_manifest: true
+    required_clean: true
+    version: null
+  third_party/deepmind_dqn:
+    repo: /root/autodl-tmp/third_party/deepmind-dqn
+    branch: master
+    commit: 9d9b1d13a2b491d6ebd4d046740c511c662bbe0f
+    tracked_clean: true
+    worktree_clean: true
+    untracked_count: 0
+    remote: https://github.com/google-deepmind/dqn.git
+    role: third_party/deepmind_dqn
+    declared_path: /root/autodl-tmp/third_party/deepmind-dqn
+    declared_remote: https://github.com/google-deepmind/dqn.git
+    expected_commit: 9d9b1d13a2b491d6ebd4d046740c511c662bbe0f
+    commit_matches_manifest: true
+    required_clean: true
+    version: null
