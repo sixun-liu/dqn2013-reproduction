@@ -39,3 +39,19 @@
 - `discussion/INDEX.md`：Codex 维护未决线程路由，不保存 canonical state。
 - 经核验事实进入 `references/`；持久决策进入 `DEVLOG.md`；实验状态和证据进入 `research/`。
 - discussion 内容本身不能支持论文复现 claim，服务器进程控制权仍归 Codex。
+
+## 精简执行方式（用户 2026-07-21 批准）
+
+1. 同一目标主张、代码谱系和协议路线只创建一个 replication cycle；smoke、pilot 和正式 run 用不同
+   run tag 与 resolved config 区分，不为每个阶段重复建 EXP。若算法行为、目标协议或 executor 改变，
+   必须重新 freeze，必要时新建 cycle。
+2. 计算前的 clean/pushed commit、`new + freeze`、expanded config、seed/预算单位、绝对 output、
+   started 信标、GPU 判重、停止条件和成本门不可省略。
+3. 运行中只维护原始日志、run STATUS、必要的模型 checkpoint 和关键边界 checkpoint event；不因
+   普通进度机械重写 `CURRENT_STATE/PLAN/TODO/DEVLOG`。
+4. smoke/pilot 只证明工程与成本，不进 scoreboard、不形成论文 claim，也不要求逐次人工 review。
+5. 结案默认只生成一份同坐标审查图，执行一次 observation/artifact/close；仅当方向、正式裁决或近期
+   动作变化时更新相应热文档。
+6. scheduler 保持只读且默认不 enqueue；discussion 只为真实协议冲突或跨 agent 交接新建文件。
+7. 用户关注点集中在正式运行成本门和最终对照图。只有安全、预算、权限边界或目标主张发生实质变化
+   时中断长期作业请求用户裁决。
