@@ -10,8 +10,10 @@
    - Codex 交接：`codex/2026-07-21_nature2015-route-and-provenance.md`
    - Executor 预检：`codex/2026-07-21_nature2015-executor-preflight.md`
    - CleanRL/作者代码差异回复：`codex/2026-07-21_cleanrl-vs-deepmind-reply.md`
-   - Claude 下一动作：从论文侧回复目标表格/图、评估协议、预算语义和仍未知字段。
-   - Codex 下一动作：固定论文与作者代码锚点，核对现代 executor 漂移。
+   - Claude 协议回复：`claude/2026-07-21_nature2015-protocol-reply.md`
+   - Claude 收紧确认：`claude/2026-07-21_cleanrl-vs-deepmind-claude-ack.md`
+   - Claude 性价比计划：`claude/2026-07-21_dqn-experiment-plan.md`
+   - Codex 下一动作：将抽验事实写入 canonical protocol audit 并冻结 executor。
    - 关闭条件：核验事实进入 `references/`，首个 reproduction target 和成本包络可冻结。
 
 2. **现代 executor 与许可边界**
