@@ -47,3 +47,8 @@ sources:
     path: /root/autodl-tmp/papers/dqn_1312.5602.pdf
     sha256: 8db04120cace173151c77e0faa6f3eaa4207009da66b9417597dc70bfee56d9c
     tracked: false
+  nature_2015_paper:
+    path: /root/autodl-tmp/papers/nature14236.pdf
+    sha256: cc811007a48aea14fcc135158ed96d01982930f415045a19f89474bfa1a74eb5
+    doi: 10.1038/nature14236
+    tracked: false

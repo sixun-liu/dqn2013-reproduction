@@ -49,10 +49,10 @@ A1 的许可限制商业使用、复制和分发，本项目只保留原仓 clon
 采用“P2/A1 定义协议，T2 提供现代执行骨架”的组合。后续衍生 executor 归类为
 `independent_reimplementation`，不得声称运行官方代码。A1 源码不得复制进公开控制仓。
 
-### 尚未冻结的两个解释
+### 已冻结的预算解释与保留限制
 
-1. P2 Extended Data Table 3 的 `10M frames` 不能先换算为 2.5M decisions。A1 的计数器以 decision
-   递增，同时把 `steps * actrep` 打印为 emulator frames；Table 3 对应 10M decisions 还是 10M
-   emulator frames，必须结合 P2 原文术语与作者实现再裁决。
+1. P2 Extended Data Table 3 的 `10M frames` 已冻结为 10M agent decisions = 40M emulator frames。
+   依据是论文 50M 与“约38天游戏经验”的60 Hz换算，以及 A1 以 decision 递增、打印
+   `frames=steps*actrep` 的计数行为；epsilon 的 1M 终点同样按 decisions 计。
 2. `replay,no-target` 是 Nature 协议内部的 target-network 消融，只能支持 target 机制比较；它不等同
    于完整 2013 DQN，也不能直接与 EXP-0001 作数值等价比较。

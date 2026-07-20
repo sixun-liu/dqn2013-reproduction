@@ -1,4 +1,4 @@
-# DQN 2013 Claim-Protocol Matrix
+# DQN Claim-Protocol Matrix
 
 ## 目标主张
 
@@ -44,3 +44,30 @@ Breakout 上的 2013 DQN 学到显著优于随机策略的行为；论文 Table 
   provenance 不足；不得据此判定有效 2013 协议的数值复现为负。
 - EXP-0002 固定 10 seed 复评确认最终 checkpoint seed mean 仅 2.21--2.46，排除了单一评估 seed
   偶然，但不解决训练协议归因。
+
+# Nature 2015 Extended Data Table 3
+
+## 目标主张
+
+Nature 2015 Extended Data Table 3 报告 Breakout replay + target Q 路线的周期评估峰值平均分
+`316.8`。本轮采用独立现代重实现，检验单 seed 学习曲线与该量级是否一致，不复现整张 2x2 表。
+
+## 冻结前协议矩阵
+
+| 字段 | 本地选择 | 证据与限制 |
+|---|---|---|
+| Paper | Nature 518 (2015), DOI `10.1038/nature14236`; SHA256 `cc811007a48aea14fcc135158ed96d01982930f415045a19f89474bfa1a74eb5` | primary；目标为 Extended Data Table 3 |
+| Reference artifact | Breakout replay + target `316.8` | 表项是三种 learning rates 中的有利结果，原始逐点评估曲线未公开 |
+| Code lineage | P2/A1 恢复协议；CleanRL MIT 骨架；本地 executor 为 `independent_reimplementation` | A1 受限源码只读，不复制进公开仓 |
+| Task/environment | Gymnasium 0.29.1 / ALE-Py 0.8.1 / `BreakoutNoFrameskip-v4`; sticky=false | 与论文原 ALE 栈有版本漂移 |
+| Preprocessing | no-op max30、两帧 max、repeat4、84x84 gray、stack4；train life-loss terminal，eval 只认 game over | wrapper 顺序和 FIRE reset 为现代实现选择 |
+| Budget | 10M agent decisions = 40M emulator frames；约 2.4875M optimizer updates | 论文时间换算与 A1 计数器共同支持；不是 2.5M decisions |
+| Training | replay 1M、warmup50K、batch32、update/4、target/10K、gamma .99；centered RMSProp 2.5e-4/.95/.95/.01；Huber delta1；reward clip | 逐项对齐 P2/A1；expanded config 在 replication freeze 固定 |
+| Exploration | 1.0 -> .1 over 1M agent decisions | A1 `eps_endt` 由 decision 计数器消费 |
+| Evaluation | 每250K train decisions；epsilon .05；135K eval decisions；无5分钟截断；完整 game mean；取轨迹 peak | 与 A1 默认125K eval存在差异时以论文 Table 3 为准 |
+| Diagnostics | warmup 后固定约500 held-out states，记录 mean max-Q | 诊断，不替代主评估 |
+| Repetitions | seed 0，固定 lr | 单 seed 且未做三 learning-rate 选择，最高 `promising_unresolved` |
+| Acceptance | 工程信标全绿；报告 peak/final 全曲线并与316.8同图；不设伪精确容差 | 未完成10M预算为 `inconclusive` |
+| Cost | pilot 100K--250K decisions；若10M ETA >20h则停止；不进入50M完整训练 | 用户批准的成本门 |
+
+完整依据、漂移与禁止解释见 `references/NATURE2015_PROTOCOL_AUDIT.md`。

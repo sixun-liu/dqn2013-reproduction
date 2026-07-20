@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-07-20T16:18:38Z
+> Updated: 2026-07-20T17:27:07Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -96,3 +96,13 @@
 - Next: 选择现代 executor 并冻结 Nature 2015 claim-protocol 后，只运行最小 smoke/pilot。
 - Approval: user
 - Git: control@`515a40c` before transition; workflow@`ffc2d66` (`v0.2.1`)
+
+### 2026-07-20T17:27:07Z | protocol | nature-2015-table3
+
+- Actor: codex
+- Summary: 首目标冻结为 Nature Extended Data Table 3 Breakout replay + target `316.8`；预算按
+  10M agent decisions = 40M emulator frames，评估每250K decisions运行135K decisions并取轨迹峰值。
+- Evidence: `references/NATURE2015_PROTOCOL_AUDIT.md`, `references/CLAIM_PROTOCOL_MATRIX.md`,
+  Nature PDF SHA256 `cc811007...eb5`, DeepMind DQN 3.0 `9d9b1d1`。
+- Next: 实现带 MIT attribution 的独立 PyTorch executor 和聚焦测试，再用100K--250K pilot实测成本。
+- Approval: user approved autonomous option 2 and cost gates
