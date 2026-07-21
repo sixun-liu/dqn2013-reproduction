@@ -247,6 +247,10 @@ def main() -> None:
         independent_result = reevaluate_checkpoint(
             args.run_dir, args.output_dir, evaluations, args.reevaluate_checkpoint.resolve()
         )
+    elif (args.output_dir / "independent_final_eval.json").exists():
+        independent_result = json.loads(
+            (args.output_dir / "independent_final_eval.json").read_text(encoding="utf-8")
+        )
 
     peak = max(evaluations, key=lambda row: row["mean_episode_return"])
     completed = json.loads((args.run_dir / ".completed").read_text(encoding="utf-8"))
