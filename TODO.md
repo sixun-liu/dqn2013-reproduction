@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-07-20T16:18:38Z
+> Updated: 2026-07-21T02:34:37Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,12 +8,10 @@
 
 ## Now
 
-- [ ] [claude] 提交 Nature 2015 Breakout 主张、评估协议和论文锚点；trigger: 读取 `discussion/INDEX.md`。
-- [ ] [codex] 固定 Nature 论文、更新实现 ledger，并完成四方协议对账；trigger: discussion 入口建立。
-- [ ] [codex] 选定现代 executor 候选并写最小 smoke/pilot 成本卡；trigger: 协议差异可枚举。
-- [ ] [user] 复核 `EXP-0001` 与 `EXP-0003` 图；trigger: 打开既有 review 入口。
+- [ ] [codex] 合并 DreamerV3 walker 与 DQN Nature 结果为中文双论文总结和日报素材；trigger: `EXP-0004` 已结案。
+- [ ] [user] 复核 `EXP-0004` 对照图；trigger: 打开 `ART-0019`。
+- [ ] [user] 复核 `EXP-0001` 与 `EXP-0003` 历史图；trigger: 需要回顾 2013 路线时。
 
 ## Waiting
 
-- [ ] [codex] 创建 Nature replication 卡并启动 smoke/pilot；trigger: 论文、executor、协议和接受包络冻结。
-- [ ] [user] 批准正式运行成本；trigger: pilot 给出实测 ETA、显存和磁盘增长。
+- [ ] [codex] 第二固定协议 seed；trigger: 用户未来要求提升 DQN 跨 seed 证据权限，当前 parked。

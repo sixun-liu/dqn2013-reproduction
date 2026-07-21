@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-07-20T17:27:07Z
+> Updated: 2026-07-21T02:34:37Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -106,3 +106,14 @@
   Nature PDF SHA256 `cc811007...eb5`, DeepMind DQN 3.0 `9d9b1d1`。
 - Next: 实现带 MIT attribution 的独立 PyTorch executor 和聚焦测试，再用100K--250K pilot实测成本。
 - Approval: user approved autonomous option 2 and cost gates
+
+## 2026-07-21
+
+### 2026-07-21T02:34:37Z | result | EXP-0004
+
+- Actor: codex
+- Summary: Nature 2015 Breakout 正式 run 自然完成；40 次评估 peak/final mean 均为 350.18，超过论文 Table 3 的 316.8 参考值 10.54%，裁决 `promising_unresolved`。
+- Evidence: EVT-0028--EVT-0032, ART-0019--ART-0027
+- Next: DQN 计算路线在单 seed 部分数值复现处停止；第二 seed 问题 parked，转入 DreamerV3 与双论文交付整合。
+- Approval: human visual review pending
+- Git: frozen runtime@`d1234d9`; result branch@`f2c15be`

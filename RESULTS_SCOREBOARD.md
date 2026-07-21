@@ -1,6 +1,6 @@
 # RESULTS_SCOREBOARD
 
-> Updated: 2026-07-17T05:26:23Z
+> Updated: 2026-07-21T02:34:37Z
 > Maintainer: codex
 > Source of truth: research/experiments.jsonl and research/artifacts.jsonl
 
@@ -9,3 +9,4 @@
 | `EXP-0001` / seed 0 | 10M emulator frames | final rolling-20 7.9；p99.5 23 | peak 10.90 @ 9M；final 2.21；paper average 168 | `promising_unresolved`；数值未复现 |
 | `EXP-0002` / fixed-seed reevaluation | final checkpoint；10 frozen seeds | N/A | seed mean 2.21--2.46；472 episodes | 排除单一评估 seed 偶然；末点退化成立 |
 | `EXP-0003` / seed 0 | 1.5M agent decisions | final-window Q mean max 3.72；loss max 0.242 | legacy 10.04；fixed seed 8.23 | `promising_unresolved`；联合单位修正避免首次失稳窗口 |
+| `EXP-0004` / seed 0 | 10M agent decisions = 40M nominal emulator frames | held-out mean max-Q final 3.671；全程有限 | peak/final 350.18；paper Table 3 316.8 | `promising_unresolved`；现代 ALE 单 seed 复现论文分数量级 |
