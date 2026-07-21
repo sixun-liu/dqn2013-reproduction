@@ -146,7 +146,7 @@ def build_figure(
     axes[0].annotate(
         f"peak {scores[peak_index]:.2f} @ {decisions_m[peak_index]:.2f}M",
         (decisions_m[peak_index], scores[peak_index]),
-        xytext=(-190, 24),
+        xytext=(-205, -58),
         textcoords="offset points",
         arrowprops={"arrowstyle": "->", "color": "#202421"},
         fontsize=10,
