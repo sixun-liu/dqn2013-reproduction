@@ -156,14 +156,11 @@ def build_figure(
     axes[0].set_xlim(0, 10.2)
     axes[0].set_ylim(bottom=0)
     axes[0].legend(frameon=False, loc="upper left")
-    axes[0].text(
-        0.01,
-        0.02,
-        "Each point: epsilon=0.05, 135K agent decisions, complete games only; "
+    axes[0].set_xlabel(
+        "Training agent decisions (millions)\n"
+        "Each point: epsilon=0.05, 135K decisions, complete games only; "
         "paper and local values are trajectory peaks.",
-        transform=axes[0].transAxes,
         fontsize=9,
-        color="#454b48",
     )
 
     axes[1].plot(q_decisions_m, q_values, color="#d17a22", linewidth=1.8)
