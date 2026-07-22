@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-07-21T02:34:37Z
+> Updated: 2026-07-22T05:28:49Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -159,3 +159,14 @@
 - Evidence: `references/surveys/DQN_EVAL_OPENREF_AUDIT.md`、`references/IMPLEMENTATION_LEDGER.md`。
 - Next: 现代化 Greydanus `r=5,d=5,sigma=3` 批处理接口并先做单状态 parity。
 - Approval: user
+
+### 2026-07-22T05:28:49Z | result | EXP-0008
+
+- Actor: codex
+- Summary: Greydanus 作者方法的 `4 checkpoints x 128 states x 289 masks` 干预通过 parity；
+  9.25M 的 local/global/frame 敏感度未高于三个对照，广泛视觉脆弱假说判为 `negative`。
+- Evidence: EVT-0051--EVT-0058, ART-0029, ART-0031；9.25M local switch 配对差区间均跨 0，
+  但 mean margin 最低、top-decile spatial concentration 最高。
+- Next: 先合并 EXP-0004/0005/0008 为同一四阶段证据图，再决定 margin 匹配或对象/RAM probe。
+- Approval: human visual review pending
+- Git: extraction freeze@`e33f000`; review@`77eff19`
