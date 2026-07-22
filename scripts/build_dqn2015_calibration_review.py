@@ -24,7 +24,7 @@ from src.dqn2015_offline_analysis import sha256_file
 
 DEFAULT_INPUT = Path("/root/autodl-tmp/artifacts/dqn2013/EXP-0006")
 DEFAULT_OUTPUT = Path(
-    "/root/autodl-tmp/artifacts/dqn2013/review/EXP-0006-dqn-calibration"
+    "/root/autodl-tmp/artifacts/dqn2013/review/EXP-0006-dqn-925m-trajectory-calibration"
 )
 
 
