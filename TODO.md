@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-07-22T03:20:00Z
+> Updated: 2026-07-22T03:56:00Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,12 +8,14 @@
 
 ## Now
 
-- [ ] [codex] 创建并冻结 EXP-0005 fixed-state probe；trigger: stage/reference/protocol commit clean。
-- [ ] [codex] 提取 40 x 500 Q/FC512 panel 并通过 parity；trigger: EXP-0005 freeze。
-- [ ] [codex] 解析 40 次 behavior evaluation 并生成首张价值/表征/行为审查图；trigger: panel valid。
+- [ ] [codex] 预注册局部 calibration probe，绑定9.0M/9.25M/9.5M/10M与训练 wrapper 语义；
+  trigger: EXP-0005 closed and source clean。
+- [ ] [codex] 先跑单阶段最小轨迹验证 reward/terminal/discount 与信号完整性，再执行四阶段；
+  trigger: calibration probe frozen。
+- [ ] [user] 复核 EXP-0005 固定状态图谱；trigger: 打开 `ART-0028`，不阻塞下一 diagnostic probe。
 - [ ] [user] 复核 EXP-0004 既有主图；trigger: 打开 `ART-0019`，不阻塞 diagnostic probe。
 
 ## Waiting
 
-- [ ] [codex] calibration trajectories 与视觉干预；trigger: fixed-state known-answer gate passed。
-- [ ] [codex] Target Network 因果消融；trigger: EXP-0005 结案并给出唯一判别问题。
+- [ ] [codex] 四帧消融与带对照 saliency；trigger: calibration 确认9.25M局部异常。
+- [ ] [codex] Target Network 因果消融；trigger: offline calibration/视觉证据闭环并形成单变量假说。

@@ -1,6 +1,6 @@
 # CURRENT_STATE
 
-> Updated: 2026-07-22T03:20:00Z
+> Updated: 2026-07-22T03:56:00Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml and research/experiments.jsonl
 
@@ -8,17 +8,17 @@
 
 ## 一句话判断
 
-Nature 2015 Breakout EXP-0004 已完成单 seed 分数量级复现，并留下 40 个周期 checkpoint、500 个
-固定状态和 40 次完整评估；当前从 `reproduction` 进入 `exploration`，用这些冻结产物建立 DQN
-价值、表征、视觉敏感性和行为随训练变化的局部证据。
+EXP-0005 已把 EXP-0004 的 40 checkpoint 与同一 500 状态恢复成可复算 Q/FC512 图谱：Q 绝对
+尺度不是策略质量的充分代理，`9.25M` 是下一轮最有信息量的局部异常。
 
 ## 当前主要矛盾
 
-现有 mean max-Q 和 return 曲线不能区分状态分布变化、价值校准、表征几何与视觉输入敏感性。
-EXP-0005 将固定状态面板与阶段策略轨迹分栏，并统一 reward/terminal/discount 语义。所有阶段关联
-保持描述性，saliency 只在正负控制通过后解释，2013/2015 差异不用于 Target Network 归因。
+`9.25M` 的 mean max-Q 全程最高 `5.315`，行为均分却只有 `141.0`；`10M` 在 mean max-Q
+降到 `3.671` 时达到 `350.18`，同时 action margin 达全程最高。原始阶段相关经一阶差分后大幅
+减弱，说明共同训练进度、局部校准和策略访问分布仍混杂。
 
 ## 下一项决策
 
-先完成 40 x 500 fixed-state Q/FC512 panel 的 known-answer 和原 held-out-Q parity。只有该门通过，
-才采 calibration trajectory 和视觉干预；EXP-0005 结案前不启动新训练。
+比较 `9.0M / 9.25M / 9.5M / 10M` 的 greedy calibration trajectories，严格匹配 clipped
+reward、life-loss terminal 和 `gamma=0.99`。只有轨迹证据确认局部异常，才进入四帧消融与
+带随机/全局控制的 saliency；当前不启动新训练。

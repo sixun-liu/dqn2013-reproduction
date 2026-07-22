@@ -128,3 +128,15 @@
 - Next: 创建 EXP-0005 probe，并先通过 fixed-state Q/FC512 panel 的 known-answer 与 held-out-Q parity。
 - Approval: user
 - Git: branch `exp/EXP-0005-dqn-offline-atlas`; baseline runtime `d1234d9`
+
+### 2026-07-22T03:55:59Z | result | EXP-0005
+
+- Actor: codex
+- Summary: 40 x 500 固定状态 Q/FC512 面板通过零误差 parity；Q 绝对尺度不是行为质量的充分
+  代理，`9.25M` 的高 Q、低 margin、低回报异常把下一轮从平均六阶段收敛到四个局部阶段。
+- Evidence: EVT-0034--EVT-0038, ART-0028；原始阶段 rho(max-Q/margin/CKA)=
+  `0.846/0.850/0.861`，一阶差分为 `0.056/0.317/0.085`。
+- Next: 用 `9.0M/9.25M/9.5M/10M` 的匹配训练语义 calibration trajectory 区分 Q 尺度尖峰、
+  状态访问与评估方差；信号通过后才做视觉干预。
+- Approval: user approved autonomous work; human visual review pending
+- Git: extraction freeze@`c88f828`; post-run atlas@`73f8a43`
