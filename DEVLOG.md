@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-07-22T05:36:29Z
+> Updated: 2026-07-22T10:44:39Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -179,3 +179,14 @@
 - Evidence: `ART-0032`, `C-0001`；输入/output hash 与生成脚本 commit `460a0d2` 已入 manifest。
 - Next: 用户复核后只在 margin 匹配、对象/RAM probe、Target Network 消融中选择一条新路线。
 - Approval: human visual review pending
+
+### 2026-07-22T10:44:39Z | decision | public-release-v0.1.0
+
+- Actor: codex
+- Summary: Nature 2015 DQN Breakout 单任务、单 seed 部分数值复现以 MIT 代码和中文报告公开；
+  默认验证环境固定为 CPU-only，CUDA 仅由完整训练的显式 `setup-gpu` 安装。
+- Evidence: GitHub Release `v0.1.0`; checkpoint SHA256 `73e3e71f...d672ef0`; 公开下载文件 CPU
+  复评 135K decisions 得到 63 games、mean `345.22`、median `377.0`。
+- Next: 等待用户/导师审阅报告；不因发布自动追加 DQN 训练或机制实验。
+- Approval: user approved MIT license and checkpoint publication
+- Git: main@`7ebbf1f`; tag `v0.1.0`; release branch@`debfa3e`
