@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dqn2013-breakout-reproduction
-updated_at: '2026-07-22T04:31:29Z'
+updated_at: '2026-07-22T04:32:41Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -27,8 +27,8 @@ stage_exit_gates:
 repository_manifest: research/repositories.yaml
 canonical_repo:
   path: /root/autodl-tmp/dqn-reproduction
-  branch: exp/EXP-0006-dqn-calibration
-  commit: f3b21f290fa518e4315ced8b2e6c706f23b36df8
+  branch: exp/EXP-0007-dqn-calibration-300k
+  commit: c3058b2c9a2b8ac2c42e8a0f7b4497d3d03ea0dc
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/artifacts/dqn2013/review
