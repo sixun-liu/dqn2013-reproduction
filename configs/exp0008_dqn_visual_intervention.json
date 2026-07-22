@@ -1,0 +1,23 @@
+{
+  "bootstrap_resamples": 2000,
+  "bootstrap_seed": 20260722,
+  "checkpoint_decisions": [
+    9000000,
+    9250000,
+    9500000,
+    10000000
+  ],
+  "experiment_id": "EXP-0008",
+  "gaussian_blur_sigma": 3.0,
+  "grid_stride": 5,
+  "mask_radius": 5.0,
+  "offline_panel": "/root/autodl-tmp/artifacts/dqn2013/EXP-0005",
+  "perturbation_batch_size": 256,
+  "random_cell_fraction": 0.1,
+  "random_cell_seed": 20260723,
+  "source_run": "/root/autodl-tmp/runs/EXP-0004__breakout__s000__10m-dec__20260720T174600Z",
+  "state_count": 128,
+  "state_selection_seed": 20260722,
+  "visualize_atari_commit": "182492dab59da50aabe254e67e6d51c4f8622400",
+  "schema_version": 1
+}

@@ -1,7 +1,7 @@
 # DQN 评估 wrapper 开源建议核验
 
-> Updated: 2026-07-22T04:48:00Z  
-> Maintainer: codex  
+> Updated: 2026-07-22T04:48:00Z
+> Maintainer: codex
 > Scope: Claude openref 交接、EXP-0006/0007 calibration 失败与本机执行栈
 
 ## 来源与版本
