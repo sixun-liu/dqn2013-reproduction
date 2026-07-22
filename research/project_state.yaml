@@ -1,13 +1,13 @@
 schema_version: 4
 project_id: dqn2013-breakout-reproduction
-updated_at: '2026-07-22T04:22:47Z'
+updated_at: '2026-07-22T04:28:14Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
 stage: exploration
 north_star: 理解DQN从2013到Nature 2015的稳定性演进，并用冻结的Nature 2015基线建立训练阶段、价值估计、内部表征、视觉关注和行为表现之间可复算的局部机制证据。
 primary_problem: 在不追加长训练的前提下，构建可追溯离线数据和统计协议，区分网络随训练的价值、表征、视觉敏感性与行为变化，并明确相关性、校准与因果边界。
-active_experiment_id: EXP-0006
+active_experiment_id: null
 active_candidate: DQN2015-OFFLINE-MECHANISM-ATLAS
 canonical_baseline:
   id: DQN2015-NATURE-BREAKOUT-INDEPENDENT
