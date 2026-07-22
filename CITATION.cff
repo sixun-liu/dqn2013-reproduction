@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this reproduction, cite the repository and the original DQN papers."
+title: "DQN 2013 to Nature 2015 Breakout Reproduction"
+type: software
+version: 0.1.0
+date-released: 2026-07-22
+authors:
+  - name: "DQN Reproduction contributors"
+repository-code: "https://github.com/sixun-liu/dqn2013-reproduction"
+license: MIT
+preferred-citation:
+  type: article
+  title: "Human-level control through deep reinforcement learning"
+  authors:
+    - family-names: Mnih
+      given-names: Volodymyr
+    - family-names: Kavukcuoglu
+      given-names: Koray
+    - family-names: Silver
+      given-names: David
+  journal: Nature
+  volume: 518
+  issue: 7540
+  year: 2015
+  doi: 10.1038/nature14236
+

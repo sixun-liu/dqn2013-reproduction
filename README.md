@@ -1,65 +1,152 @@
-# DQN 2013 到 Nature 2015 Breakout 部分复现
+# DQN 2013 到 Nature 2015 Breakout 复现
 
-本项目以 Breakout 为单任务线索，研究 DQN 从 2013 arXiv 版本到 Nature 2015 版本的稳定性演进，
-并分别保留单 seed 部分复现证据。2013 论文报告平均分 168、best 225；当前 Nature 主线参考
-Extended Data Table 3 的 316.8。现代 ALE、启动随机化和预算语义存在历史漂移，因此不承诺逐分对齐。
+[![verify](https://github.com/sixun-liu/dqn2013-reproduction/actions/workflows/verify.yml/badge.svg)](https://github.com/sixun-liu/dqn2013-reproduction/actions/workflows/verify.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-本仓是复现 control repo，也跟踪独立实现和分析脚本。第三方代码、大型 run、checkpoint、ROM、
-论文 PDF 和完整 artifact 均在 Git 外，通过 `research/repositories.yaml`、commit 和 hash 关联。
+本仓库提供一套可审计、可验证的 DQN Breakout 独立复现：先保留 2013 arXiv 版本的实现与失败分析，
+再以 Nature 2015 Extended Data Table 3 的 replay + target 条件为主线完成单 seed 部分数值复现。
 
-## 代码与环境
+核心结果：现代 ALE 独立 PyTorch 实现在 10M agent decisions 后得到周期评估 peak/final mean
+`350.18`，论文参考为 `316.8`。由于只有一个训练 seed、一个游戏且执行栈不同，结论限定为
+**单任务、单 seed、现代执行栈下的部分数值复现**。
 
-- 独立实现：`src/dqn2013_breakout.py`
-- 源码 SHA256：`77aa269cd39888ebae4b0c256a120056141f96978284428801f2493e23ee62c0`
-- Python env：`/root/autodl-tmp/envs/dqn2013`
-- Atari：Gymnasium 0.29.1、ALE-Py 0.8.1、`BreakoutNoFrameskip-v4`
-- GPU runtime：PyTorch 2.13.0+cu130，RTX 5090 capability 12.0 已实测
-- 第三方参照：CleanRL commit `fe8d8a03c41a7ef5b523e2e354bd01c363e786bb`，MIT
+![Nature 2015 DQN Breakout reproduction](reports/assets/EXP-0004/nature2015_breakout_replication.png)
 
-## 2013 语义
+![Final Breakout policy](reports/assets/EXP-0004/dqn_breakout_demo.gif)
 
-- 两层卷积（16x8x8/stride4，32x4x4/stride2）+ 256 隐层；
-- online Q bootstrap target，不使用延迟 target network；
-- RMSProp、uniform replay、reward clipping、4-frame stack；
-- epsilon 从 1.0 降到 0.1；独立 epsilon 0.05 evaluation；
-- action repeat 4，不使用 Nature 版的 max-pooling 和 life-loss terminal。
+## 三分钟验证
 
-随机 no-op 与 FIRE reset 是现代可运行性处理，optimizer 常数和 frame-budget 语义也存在历史
-不确定性，均在 `references/CLAIM_PROTOCOL_MATRIX.md` 中登记。
-
-## 当前结果
-
-`EXP-0001` 已完成 10M emulator frames。epsilon=.05 评估峰值为 10.90，最终为 2.21；前者说明
-确有学习，后者显示策略明显回退，两者都远低于论文平均 168。中文裁决与原始证据见
-`/root/autodl-tmp/artifacts/dqn2013/EXP-0001/RESULT.md`。
-
-`EXP-0003` 只修正 replay capacity 与 epsilon decay 的 agent-step 单位：终段 Q mean max 从
-61.74 降到 3.72，配对终点评估从 2.51 提高到 10.04。该干预支持单位缩短是首次失稳的重要
-促成因素，但单 seed、联合变量和 1.5M decisions 仍只支持 `promising_unresolved`，不构成论文
-168 分的数值复现。
-
-## 仓库角色
-
-| 角色 | 位置 |
-|---|---|
-| control/runtime | 本仓与 `src/` |
-| workflow | `/root/autodl-tmp/research-agent-kit@ffc2d66`，tag `v0.2.1` |
-| third-party | `/root/autodl-tmp/third_party/`，逐仓固定 commit |
-| runs | `/root/autodl-tmp/runs/` |
-| artifacts | `/root/autodl-tmp/artifacts/dqn2013/` |
-
-本仓首次提交晚于三个已完成实验，历史边界见 `MIGRATION.md`。恢复状态时运行：
+Linux 和 Python 3.10/3.11 环境下：
 
 ```bash
-researchctl status
-researchctl audit --strict
-researchctl hygiene
+git clone https://github.com/sixun-liu/dqn2013-reproduction.git
+cd dqn2013-reproduction
+DQN_ACCEPT_ROM_LICENSE=1 ./scripts/reproduce.sh setup
+./scripts/reproduce.sh test
+./scripts/reproduce.sh smoke
+./scripts/reproduce.sh verify-reference
 ```
 
-## Nature 2015 执行器
+`setup` 会创建 `.venv` 并安装依赖。Atari ROM 不在本仓库中；设置
+`DQN_ACCEPT_ROM_LICENSE=1` 表示调用者已阅读并接受 AutoROM 提供的独立 ROM 许可证。
 
-当前主线以 Nature 2015 Extended Data Table 3 的 Breakout `316.8` 为参考，冻结预算为 10M agent
-decisions（40M nominal emulator frames）。`src/dqn2015_nature_breakout.py` 是基于 CleanRL MIT 工程
-结构编写的独立 PyTorch executor；DeepMind DQN 3.0 只作协议 oracle，未复制其受限许可源码。
-CleanRL attribution 与许可见 `LICENSES/CleanRL-MIT.txt`；完整协议和不可比边界见
-`references/NATURE2015_PROTOCOL_AUDIT.md`。
+成功的 smoke 应完成：
+
+- 256 agent decisions；
+- 56 次 optimizer update；
+- 4 次 Target Network 同步；
+- held-out Q、独立 evaluation 和可加载 checkpoint；
+- `verify_run.py` 输出 `"status": "ok"`。
+
+更详细的安装、GPU、输出和故障排查见 [REPRODUCING.md](REPRODUCING.md)。
+
+## 验证发布 checkpoint
+
+`v0.1.0` Release 提供最终 checkpoint，不包含 ROM：
+
+```bash
+curl -L -o dqn2015-breakout-exp0004-s0-10m.pt \
+  https://github.com/sixun-liu/dqn2013-reproduction/releases/download/v0.1.0/dqn2015-breakout-exp0004-s0-10m.pt
+sha256sum -c reports/assets/EXP-0004/checkpoint.sha256
+./scripts/reproduce.sh eval dqn2015-breakout-exp0004-s0-10m.pt
+```
+
+冻结评估协议为 epsilon `0.05`、seed `10000`、135K agent decisions、只统计完整 games。原运行和
+独立复评都得到 60 局、mean `350.1833`，逐局 return 序列完全一致。跨硬件或依赖版本时应报告
+实际结果，不把浮点级完全一致作为普适要求。
+
+## 从头运行正式复现
+
+```bash
+./scripts/reproduce.sh full
+```
+
+正式配置为 [configs/public/nature2015_table3_10m.json](configs/public/nature2015_table3_10m.json)，
+与冻结的 EXP-0004 formal config 除输出路径外逐字段相同。本机 RTX 5090 运行约 `7.93h`；ALE、
+图像预处理和 replay 主要消耗 CPU/内存，因此 GPU 利用率呈脉冲状。
+
+完整运行会输出：
+
+```text
+runs/<tag>/
+├── .started
+├── .completed
+├── resolved_config.json
+├── runtime.json
+├── metrics.jsonl
+├── heldout_states.npy
+├── checkpoints.jsonl
+└── checkpoints/
+```
+
+当前 checkpoint 保存网络、优化器和 RNG，但不保存 replay 与 ALE state，因此用于评估，不能声称
+协议等价地恢复中断训练。
+
+## 结果
+
+| 项目 | 数值 |
+|---|---:|
+| 论文目标 | Nature 2015 Extended Data Table 3, Breakout replay + target |
+| 论文参考 | 316.8 |
+| 本地预算 | 10M agent decisions = 40M nominal emulator frames |
+| 周期评估 | 40 次，合计 5,498 个完整 games |
+| 本地 peak / final mean | 350.1833 |
+| Final median | 373.5 |
+| 独立 checkpoint 复评 | 60 games，mean 350.1833 |
+| 训练墙钟时间 | 7.934 h |
+| 裁决 | `promising_unresolved` |
+
+机器可读结果位于 [reports/assets/EXP-0004](reports/assets/EXP-0004/)，运行：
+
+```bash
+./scripts/reproduce.sh verify-reference
+```
+
+即可检查所有公开结果文件的 SHA256、40 点曲线、headline 数值和 checkpoint 指纹。
+
+## 方法与实现
+
+Nature 2015 执行器位于 [src/dqn2015_nature_breakout.py](src/dqn2015_nature_breakout.py)，包含：
+
+- 三层卷积网络 `32/64/64 + FC512`；
+- uniform replay，capacity 1M，50K warmup；
+- 每 4 decisions 更新一次，batch 32；
+- 每 10K decisions 硬同步 Target Network；
+- centered RMSProp、clipped TD/Huber 梯度和 reward clipping；
+- train/eval 分离的 life-loss terminal 与 full-game evaluation；
+- JSONL、运行时版本、信标、held-out Q 和周期 checkpoint。
+
+公开 JSON config 由 [scripts/run_nature2015_config.py](scripts/run_nature2015_config.py) 直接消费，
+checkpoint 由 [scripts/evaluate_dqn2015_checkpoint.py](scripts/evaluate_dqn2015_checkpoint.py) 独立评估。
+31 项单元测试覆盖网络尺寸、optimizer 一步公式、TD 梯度、epsilon、训练边界、Target Network、
+wrapper、checkpoint、离线统计和发布配置 parity。
+
+完整方法、代码走读、协议、结果与限制见
+[DQN_REPRODUCTION_REPORT.md](reports/DQN_REPRODUCTION_REPORT.md)。
+
+## 2013 与 2015 路线
+
+| 项目 | 2013 arXiv 实现 | Nature 2015 主线 |
+|---|---|---|
+| 网络 | 两层卷积 + FC256 | 三层卷积 + FC512 |
+| TD target | 当前 online Q | 延迟 Target Network |
+| 主运行结果 | 峰值 10.90、最终 2.21，数值未复现 | peak/final 350.18，部分数值复现 |
+| 用途 | 历史实现、失稳与单位问题分析 | 当前可执行、可验证主线 |
+
+两条路线的架构、预处理、预算和评估不同，不能把它们当作 Target Network 的单变量因果消融。
+
+## 代码谱系
+
+- 论文事实：Mnih et al. 2013 与 Nature 2015 原文。
+- 作者协议 oracle：DeepMind DQN 3.0 `9d9b1d1`，受限源码不在本仓库分发。
+- 现代工程参照：CleanRL `fe8d8a0`，MIT attribution 见
+  [LICENSES/CleanRL-MIT.txt](LICENSES/CleanRL-MIT.txt)。
+- 本仓实现类别：`independent_reimplementation`。
+
+协议恢复见 [references/NATURE2015_PROTOCOL_AUDIT.md](references/NATURE2015_PROTOCOL_AUDIT.md)，
+第三方声明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+
+## 许可证
+
+项目代码使用 [MIT License](LICENSE)。Atari ROM、原论文、DeepMind DQN 源码和 Release checkpoint
+各自受其来源及适用条款约束；本仓库不分发 ROM 或 DeepMind 受限源码。
