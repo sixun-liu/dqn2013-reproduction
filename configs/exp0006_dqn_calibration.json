@@ -21,11 +21,11 @@
     "RecordEpisodeStatistics"
   ],
   "max_agent_decisions_per_stage": 135000,
-  "post_fire_noop_max": 31,
+  "post_fire_noop_max": 22,
   "post_fire_noop_schedule_seed": 31000,
   "reservoir_states_per_stage": 256,
   "rollout_seed": 30000,
   "schema_version": 1,
   "source_run": "/root/autodl-tmp/runs/EXP-0004__breakout__s000__10m-dec__20260720T174600Z",
-  "target_complete_games_per_stage": 32
+  "target_complete_games_per_stage": 23
 }
