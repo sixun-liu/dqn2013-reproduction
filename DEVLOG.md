@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-07-22T05:28:49Z
+> Updated: 2026-07-22T05:36:29Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -170,3 +170,12 @@
 - Next: 先合并 EXP-0004/0005/0008 为同一四阶段证据图，再决定 margin 匹配或对象/RAM probe。
 - Approval: human visual review pending
 - Git: extraction freeze@`e33f000`; review@`77eff19`
+
+### 2026-07-22T05:36:29Z | synthesis | C-0001
+
+- Actor: codex
+- Summary: 将 EXP-0004 行为、EXP-0005 Q/FC512 与 EXP-0008 视觉干预按四个共同 checkpoint
+  合并；9.25M 的局部异常固定为高 Q、低 margin、低 CKA/rank、低扰动幅度和高空间集中度共现。
+- Evidence: `ART-0032`, `C-0001`；输入/output hash 与生成脚本 commit `460a0d2` 已入 manifest。
+- Next: 用户复核后只在 margin 匹配、对象/RAM probe、Target Network 消融中选择一条新路线。
+- Approval: human visual review pending
