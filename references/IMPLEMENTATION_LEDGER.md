@@ -7,6 +7,9 @@
 | A1 | `/root/autodl-tmp/third_party/deepmind-dqn` | commit `9d9b1d13a2b491d6ebd4d046740c511c662bbe0f` | Limited academic review license | author | 2015 作者代码谱系与 step/frame 语义；不可当 2013 原码 |
 | T1 | `/root/autodl-tmp/third_party/deep_q_rl` | commit `34202491f5d8c219f52410d19cd0e91d44c37ecc` | BSD-3-Clause | third_party | 2013/NIPS 参数缺口的交叉核对 |
 | T2 | `/root/autodl-tmp/third_party/cleanrl` | commit `fe8d8a03c41a7ef5b523e2e354bd01c363e786bb` | MIT | third_party | 现代工程结构与 2015 差异说明 |
+| T3 | `/root/autodl-tmp/third_party/visualize_atari` | commit `182492dab59da50aabe254e67e6d51c4f8622400` | MIT（README/源码头声明） | author | Greydanus 扰动 saliency 公式、默认 `r=5,d=5,sigma=3` |
+| T4 | `/root/autodl-tmp/third_party/atari-representation-learning` | commit `a06f52ca3bfafbd8a805254e10ea8f159251a0b4` | MIT | author | Breakout RAM 注释与 episode-level linear probe 参考；当前 parked |
+| T5 | `/root/autodl-tmp/third_party/saliency_maps` | commit `500aefc440b118d355122ae93579f0824b350390` | 未发现 license 文件 | author | Atrey 反事实方法只读参考，不复制源码 |
 | L1 | `/root/autodl-tmp/dqn-reproduction/src/dqn2013_breakout.py` | SHA256 `77aa269cd39888ebae4b0c256a120056141f96978284428801f2493e23ee62c0` | project-local | independent_reimplementation | EXP-0001 冻结实现 |
 
 ## 关键文件 hash
@@ -20,6 +23,9 @@
 - T1 `LICENSE.txt`: `307464d74dc0ecd4a544a2b20e480f5b64d2eb8d846c24e5eb1d8aa338494110`
 - T1 `run_nips.py`: `1e5fe09ed215916708a1cd1783fc6898ebc82f5bde5ed32c5f9b9c2c1d41c90a`
 - T2 `cleanrl/dqn_atari.py`: `84ec363765bf3493761186eb1c7ea7ae7dcadaebed3ddddebdf4479bd2dd34f2`
+- T3 `saliency.py`: author formula and MIT header at lines 1, 15--23, 38--52；执行时固定 Git commit。
+- T4 `LICENSE`: MIT；`ram_annotations.py` 的 Breakout 字段为 ball x/y、player x、blocks、score。
+- T5 未发现 LICENSE/COPYING；仅允许从论文/代码理解方法，不向公开控制仓复制源码。
 
 A1 的许可限制商业使用、复制和分发，本项目只保留原仓 clone 用于学术核对；不得把其源码复制进
 本地实现。T1 和 T2 的结论仍是第三方证据，遇到与对应 primary paper（P1/P2）冲突时不晋升为

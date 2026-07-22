@@ -1,5 +1,5 @@
 schema_version: 2
-updated_at: '2026-07-17T05:47:34Z'
+updated_at: '2026-07-22T04:50:00Z'
 repositories:
   control:
     path: /root/autodl-tmp/dqn-reproduction
@@ -38,6 +38,24 @@ third_party:
     remote: https://github.com/google-deepmind/dqn.git
     commit: 9d9b1d13a2b491d6ebd4d046740c511c662bbe0f
     license: limited-academic-review
+    required_clean: true
+  visualize_atari:
+    path: /root/autodl-tmp/third_party/visualize_atari
+    remote: https://github.com/greydanus/visualize_atari.git
+    commit: 182492dab59da50aabe254e67e6d51c4f8622400
+    license: MIT-declared-in-readme-and-source-headers
+    required_clean: true
+  atari_representation_learning:
+    path: /root/autodl-tmp/third_party/atari-representation-learning
+    remote: https://github.com/mila-iqia/atari-representation-learning.git
+    commit: a06f52ca3bfafbd8a805254e10ea8f159251a0b4
+    license: MIT
+    required_clean: true
+  saliency_maps:
+    path: /root/autodl-tmp/third_party/saliency_maps
+    remote: https://github.com/KDL-umass/saliency_maps.git
+    commit: 500aefc440b118d355122ae93579f0824b350390
+    license: no-license-file-read-only-reference
     required_clean: true
 stores:
   runs: /root/autodl-tmp/runs

@@ -140,3 +140,22 @@
   状态访问与评估方差；信号通过后才做视觉干预。
 - Approval: user approved autonomous work; human visual review pending
 - Git: extraction freeze@`c88f828`; post-run atlas@`73f8a43`
+
+### 2026-07-22T04:47:24Z | route_closed | EXP-0006--EXP-0007
+
+- Actor: codex
+- Summary: 匹配训练语义的纯 greedy calibration 两级成本门均未形成四阶段共同面板；9.5M 在
+  300K decisions 内仅完成17/23局，按预注册停止重试，所有部分 Q-G trace 排除。
+- Evidence: EVT-0039--EVT-0048；失败现场 `EXP-0006-failed-*`、`EXP-0007-failed-cap300k`。
+- Next: Q-G 保持 unknown；转向固定状态四帧消融与作者公式 blur perturbation。
+- Approval: user approved autonomous work; no human review required for failed completion signal
+- Git: EXP-0007 freeze@`c3058b2`
+
+### 2026-07-22T04:50:00Z | decision | author-interpretability-code
+
+- Actor: user, codex
+- Summary: 优先参考作者开源实现。Greydanus `182492d` 为当前视觉干预公式 oracle；AtariARI
+  `a06f52c` parked；Atrey `500aefc` 因无 license 文件与 Toybox 依赖仅只读参考。
+- Evidence: `references/surveys/DQN_EVAL_OPENREF_AUDIT.md`、`references/IMPLEMENTATION_LEDGER.md`。
+- Next: 现代化 Greydanus `r=5,d=5,sigma=3` 批处理接口并先做单状态 parity。
+- Approval: user
