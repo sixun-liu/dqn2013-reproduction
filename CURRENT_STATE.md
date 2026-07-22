@@ -1,6 +1,6 @@
 # CURRENT_STATE
 
-> Updated: 2026-07-21T02:34:37Z
+> Updated: 2026-07-22T03:20:00Z
 > Maintainer: codex
 > Source of truth: research/project_state.yaml and research/experiments.jsonl
 
@@ -8,18 +8,17 @@
 
 ## 一句话判断
 
-Nature 2015 Breakout `EXP-0004` 已在冻结的现代独立重实现上完成 10M agent decisions；40 次周期
-评估 peak/final mean 均为 350.18，相对论文 Table 3 的 316.8 高 10.54%。本轮复现了论文分数量级，
-但单 seed、现代 ALE 和固定单一学习率使裁决保持 `promising_unresolved`。
+Nature 2015 Breakout EXP-0004 已完成单 seed 分数量级复现，并留下 40 个周期 checkpoint、500 个
+固定状态和 40 次完整评估；当前从 `reproduction` 进入 `exploration`，用这些冻结产物建立 DQN
+价值、表征、视觉敏感性和行为随训练变化的局部证据。
 
 ## 当前主要矛盾
 
-DQN 的当前目标是给 DreamerV3 复现铺设 RL 基础，而不是提升为多 seed、全 Atari 论文复现。
-现有 checkpoint 已独立复评且逐 episode 完全一致，继续增加 seed 的边际收益低于转回 DreamerV3
-交付整合。剩余不确定性应保留为边界，不能用单条高分曲线外推跨 seed 稳定性。
+现有 mean max-Q 和 return 曲线不能区分状态分布变化、价值校准、表征几何与视觉输入敏感性。
+EXP-0005 将固定状态面板与阶段策略轨迹分栏，并统一 reward/terminal/discount 语义。所有阶段关联
+保持描述性，saliency 只在正负控制通过后解释，2013/2015 差异不用于 Target Network 归因。
 
 ## 下一项决策
 
-停止新增 DQN 计算，把 `EXP-0004` 对照图交用户复核，并与既有 DreamerV3 walker 结果合并成中文
-双论文复现总结和日报素材。若未来需要提升 DQN 证据权限，唯一下一判别问题是第二固定协议 seed
-能否仍进入 316.8 量级；该问题目前明确 parked。
+先完成 40 x 500 fixed-state Q/FC512 panel 的 known-answer 和原 held-out-Q parity。只有该门通过，
+才采 calibration trajectory 和视觉干预；EXP-0005 结案前不启动新训练。

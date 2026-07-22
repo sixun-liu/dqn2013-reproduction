@@ -117,3 +117,14 @@
 - Next: DQN 计算路线在单 seed 部分数值复现处停止；第二 seed 问题 parked，转入 DreamerV3 与双论文交付整合。
 - Approval: human visual review pending
 - Git: frozen runtime@`d1234d9`; result branch@`f2c15be`
+
+## 2026-07-22
+
+### 2026-07-22T03:20:00Z | decision | dqn-offline-mechanism-exploration
+
+- Actor: user, codex
+- Summary: 项目从 Nature 单 seed 结果复现进入 exploration；冻结 EXP-0004 为唯一 baseline，优先复用 40 个 checkpoint、500 个固定状态和评估轨迹建立价值、表征、视觉敏感性与行为的离线局部证据。
+- Evidence: `references/DQN_OFFLINE_ANALYSIS_PROTOCOL.md`；六篇 primary PDF hash；Claude 两份 `internal_synthesis` ingestion manifest。
+- Next: 创建 EXP-0005 probe，并先通过 fixed-state Q/FC512 panel 的 known-answer 与 held-out-Q parity。
+- Approval: user
+- Git: branch `exp/EXP-0005-dqn-offline-atlas`; baseline runtime `d1234d9`

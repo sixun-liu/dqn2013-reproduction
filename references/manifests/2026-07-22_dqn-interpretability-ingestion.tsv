@@ -1,0 +1,4 @@
+source_path	destination_path	author	source_class	ingested_at_utc	sha256
+/root/autodl-tmp/dreamerv3/docs_from_claude/2026-07-22_dqn-offline-quant-analysis.md	references/understanding/2026-07-22_claude-dqn-offline-quant-analysis.md	Claude	internal_synthesis	2026-07-22T03:20:00Z	44bcb65c7def4aa142b56dd8caaf3f7d91a238d77d16034fbdd0232f0dfffd78
+/root/autodl-tmp/dreamerv3/docs_from_claude/2026-07-22_dqn-interpretability-methods-spec.md	references/understanding/2026-07-22_claude-dqn-interpretability-methods-spec.md	Claude	internal_synthesis	2026-07-22T03:20:00Z	43a67accaccc3a87ea0ae62a6d0edf15fb051dfdb9b5eafd6283c6ddb411c7eb
+

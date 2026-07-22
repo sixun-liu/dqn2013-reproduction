@@ -1,6 +1,6 @@
 # TODO
 
-> Updated: 2026-07-21T02:34:37Z
+> Updated: 2026-07-22T03:20:00Z
 > Maintainer: codex
 > Source of truth: manual action view; long-lived tasks use research/tasks.jsonl
 
@@ -8,10 +8,12 @@
 
 ## Now
 
-- [ ] [codex] 合并 DreamerV3 walker 与 DQN Nature 结果为中文双论文总结和日报素材；trigger: `EXP-0004` 已结案。
-- [ ] [user] 复核 `EXP-0004` 对照图；trigger: 打开 `ART-0019`。
-- [ ] [user] 复核 `EXP-0001` 与 `EXP-0003` 历史图；trigger: 需要回顾 2013 路线时。
+- [ ] [codex] 创建并冻结 EXP-0005 fixed-state probe；trigger: stage/reference/protocol commit clean。
+- [ ] [codex] 提取 40 x 500 Q/FC512 panel 并通过 parity；trigger: EXP-0005 freeze。
+- [ ] [codex] 解析 40 次 behavior evaluation 并生成首张价值/表征/行为审查图；trigger: panel valid。
+- [ ] [user] 复核 EXP-0004 既有主图；trigger: 打开 `ART-0019`，不阻塞 diagnostic probe。
 
 ## Waiting
 
-- [ ] [codex] 第二固定协议 seed；trigger: 用户未来要求提升 DQN 跨 seed 证据权限，当前 parked。
+- [ ] [codex] calibration trajectories 与视觉干预；trigger: fixed-state known-answer gate passed。
+- [ ] [codex] Target Network 因果消融；trigger: EXP-0005 结案并给出唯一判别问题。
