@@ -22,9 +22,9 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from src.dqn2015_offline_analysis import sha256_file
 
 
-DEFAULT_INPUT = Path("/root/autodl-tmp/artifacts/dqn2013/EXP-0006")
+DEFAULT_INPUT = Path("/root/autodl-tmp/artifacts/dqn2013/EXP-0007")
 DEFAULT_OUTPUT = Path(
-    "/root/autodl-tmp/artifacts/dqn2013/review/EXP-0006-dqn-925m-trajectory-calibration"
+    "/root/autodl-tmp/artifacts/dqn2013/review/EXP-0007-dqn-925m-calibration-300k"
 )
 
 
@@ -73,6 +73,10 @@ def main() -> int:
     output_dir = args.output_dir.resolve()
     if not (input_dir / ".completed").is_file():
         raise ValueError("Calibration collection is incomplete")
+    collection_completed = json.loads(
+        (input_dir / ".completed").read_text(encoding="utf-8")
+    )
+    experiment_id = str(collection_completed["experiment_id"])
     output_dir.mkdir(parents=True, exist_ok=True)
 
     games = pd.read_csv(input_dir / "games.csv")
@@ -185,10 +189,10 @@ def main() -> int:
     for ax in axes.flat:
         ax.grid(alpha=0.2, linewidth=0.6)
     fig.suptitle(
-        "EXP-0006 | DQN life-terminal calibration | fixed rollout seed | diagnostic",
+        f"{experiment_id} | DQN life-terminal calibration | fixed start phases | diagnostic",
         fontsize=15,
     )
-    figure_path = output_dir / "EXP-0006_calibration_review.png"
+    figure_path = output_dir / f"{experiment_id}_calibration_review.png"
     temporary = figure_path.with_suffix(".tmp.png")
     fig.savefig(temporary, dpi=180, facecolor="white")
     plt.close(fig)
@@ -206,7 +210,7 @@ def main() -> int:
     script_path = Path(__file__).resolve()
     manifest = {
         "schema_version": 1,
-        "experiment_id": "EXP-0006",
+        "experiment_id": experiment_id,
         "analysis_commit": subprocess.check_output(
             ["git", "-C", str(PROJECT_ROOT), "rev-parse", "HEAD"], text=True
         ).strip(),
@@ -230,7 +234,7 @@ def main() -> int:
     }
     atomic_json(output_dir / "review_manifest.json", manifest)
     review_summary = {
-        "experiment_id": "EXP-0006",
+        "experiment_id": experiment_id,
         "checkpoint_stages": stages,
         "game_count_per_stage": {
             str(int(key)): int(value)
@@ -249,7 +253,7 @@ def main() -> int:
     atomic_json(
         output_dir / ".completed",
         {
-            "experiment_id": "EXP-0006",
+            "experiment_id": experiment_id,
             "completed": True,
             "figure": str(figure_path),
             "figure_sha256": sha256_file(figure_path),
