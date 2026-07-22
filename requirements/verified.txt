@@ -1,0 +1,17 @@
+# Environment used for EXP-0004 and the release verification on 2026-07-22.
+# PyTorch 2.13.0 in the original run was the CUDA 13.0 build. Install the
+# hardware-appropriate PyTorch wheel before using this file on another CUDA
+# stack if the default index does not provide that build.
+AutoROM==0.6.1
+AutoROM.accept-rom-license==0.6.1
+ale-py==0.8.1
+gymnasium==0.29.1
+matplotlib==3.10.9
+numpy==2.2.6
+opencv-python-headless==4.13.0.92
+pandas==2.3.3
+scipy==1.15.3
+stable-baselines3==2.3.2
+torch==2.13.0
+tyro==1.0.15
+
