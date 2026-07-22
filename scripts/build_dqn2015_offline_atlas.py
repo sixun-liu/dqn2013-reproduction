@@ -246,7 +246,7 @@ def render_figure(stages: pd.DataFrame, q_values: np.ndarray, output: Path) -> N
     for step in (9.25, 10.0):
         row = stages.loc[x == step].iloc[0]
         ax.annotate(
-            f"{step:.2g}M",
+            f"{step:g}M",
             (row["max_q_mean"], row["behavior_mean_episode_return"]),
             xytext=(5, 5),
             textcoords="offset points",
@@ -265,8 +265,9 @@ def render_figure(stages: pd.DataFrame, q_values: np.ndarray, output: Path) -> N
     ax.legend(frameon=False)
 
     for ax in axes.flat:
-        ax.set_xlabel("training decisions (M)")
         ax.grid(alpha=0.2, linewidth=0.6)
+    for ax in (axes[0, 0], axes[0, 1], axes[1, 0], axes[1, 1], axes[2, 1]):
+        ax.set_xlabel("training decisions (M)")
     fig.suptitle("EXP-0005 | Nature DQN fixed-state offline atlas | seed 0 diagnostic", fontsize=15)
     temporary = output.with_suffix(".tmp.png")
     fig.savefig(temporary, dpi=180, facecolor="white")
