@@ -115,6 +115,22 @@ def checkpoint_map(source_run: Path) -> dict[int, Path]:
     }
 
 
+def post_fire_noop_burnin(
+    env,
+    observation: np.ndarray,
+    count: int,
+) -> tuple[np.ndarray, float]:
+    clipped_reward_sum = 0.0
+    for _ in range(count):
+        observation, reward, terminated, truncated, _info = env.step(0)
+        if terminated or truncated:
+            raise RuntimeError("Post-FIRE NOOP burn-in reached a terminal state")
+        if float(reward) not in (-1.0, 0.0, 1.0):
+            raise ValueError(f"Burn-in reward is not clipped: {reward}")
+        clipped_reward_sum += float(reward)
+    return observation, clipped_reward_sum
+
+
 def complete_life(
     records: list[dict[str, Any]],
     *,
@@ -199,6 +215,7 @@ def collect_stage(
     device: torch.device,
     stop: StopController,
     expected_wrapper_prefix: list[str],
+    post_fire_noop_schedule: list[int],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], np.ndarray, list[dict[str, int]], dict[str, Any]]:
     payload = torch.load(checkpoint_path, map_location=device, weights_only=False)
     if int(payload["completed_agent_decisions"]) != checkpoint_decisions:
@@ -216,6 +233,10 @@ def collect_stage(
             f"Training wrapper order drifted: {wrappers[:len(expected_wrapper_prefix)]}"
         )
     observation, _ = env.reset(seed=rollout_seed)
+    observation, current_game_burnin_reward = post_fire_noop_burnin(
+        env, observation, post_fire_noop_schedule[0]
+    )
+    current_game_burnin_count = post_fire_noop_schedule[0]
     reservoir = np.empty((reservoir_size, 4, 84, 84), dtype=np.uint8)
     reservoir_metadata: list[dict[str, int]] = []
     reservoir_rng = np.random.default_rng(rollout_seed + checkpoint_decisions)
@@ -308,13 +329,17 @@ def collect_stage(
                     current_life = []
                     if real_game_end:
                         game_rows.append(
-                            summarize_game(
-                                checkpoint_decisions,
-                                game_id,
-                                current_game_lives,
-                                current_game_steps,
-                                info,
-                            )
+                            {
+                                **summarize_game(
+                                    checkpoint_decisions,
+                                    game_id,
+                                    current_game_lives,
+                                    current_game_steps,
+                                    info,
+                                ),
+                                "post_fire_noop_burnin": current_game_burnin_count,
+                                "burnin_clipped_reward_sum": current_game_burnin_reward,
+                            }
                         )
                         game_id += 1
                         life_id = 0
@@ -323,6 +348,11 @@ def collect_stage(
                     else:
                         life_id += 1
                     observation, _ = env.reset()
+                    if real_game_end and game_id < target_games:
+                        current_game_burnin_count = post_fire_noop_schedule[game_id]
+                        observation, current_game_burnin_reward = post_fire_noop_burnin(
+                            env, observation, current_game_burnin_count
+                        )
         if game_id != target_games:
             raise RuntimeError(
                 f"Stage {checkpoint_decisions} completed {game_id}/{target_games} games "
@@ -343,6 +373,8 @@ def collect_stage(
         "agent_decisions": stage_step,
         "completed_games": len(game_rows),
         "completed_lives": len(life_rows),
+        "post_fire_noop_schedule": post_fire_noop_schedule,
+        "post_fire_noop_total": int(sum(post_fire_noop_schedule)),
         "wall_seconds": time.monotonic() - started,
         "wrapper_types": wrappers,
     }
@@ -460,6 +492,13 @@ def main() -> int:
         max_decisions = int(cli.max_decisions or config["max_agent_decisions_per_stage"])
         if target_games <= 1 or max_decisions <= 0:
             raise ValueError("Calibration requires at least two games and a positive decision cap")
+        noop_values = np.arange(int(config["post_fire_noop_max"]) + 1)
+        if target_games > len(noop_values):
+            raise ValueError("Target games exceed the unique post-FIRE NOOP schedule")
+        noop_rng = np.random.default_rng(int(config["post_fire_noop_schedule_seed"]))
+        post_fire_noop_schedule = [
+            int(value) for value in noop_rng.permutation(noop_values)[:target_games]
+        ]
         if cli.device == "auto":
             device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         else:
@@ -496,6 +535,7 @@ def main() -> int:
                 device=device,
                 stop=stop,
                 expected_wrapper_prefix=list(config["expected_wrapper_prefix"]),
+                post_fire_noop_schedule=post_fire_noop_schedule,
             )
             all_lives.extend(lives)
             all_games.extend(games)
@@ -549,6 +589,8 @@ def main() -> int:
             "target_complete_games_per_stage": target_games,
             "max_agent_decisions_per_stage": max_decisions,
             "rollout_seed": int(config["rollout_seed"]),
+            "post_fire_noop_schedule_seed": int(config["post_fire_noop_schedule_seed"]),
+            "post_fire_noop_schedule": post_fire_noop_schedule,
             "discount": float(config["discount"]),
             "executor_args": asdict(executor_args),
             "inputs": {
