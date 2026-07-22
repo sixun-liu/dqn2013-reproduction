@@ -100,6 +100,7 @@ def summarize_stages(
 ) -> list[dict[str, Any]]:
     metrics = (
         ("saliency_mean", np.mean),
+        ("saliency_normalized_mean", np.mean),
         ("saliency_p95", np.mean),
         ("saliency_entropy_normalized", np.mean),
         ("top_decile_concentration", np.mean),
@@ -107,8 +108,10 @@ def summarize_stages(
         ("spatial_action_switch_fraction", np.mean),
         ("spatial_original_action_delta_mean", np.mean),
         ("global_blur_q_score", np.mean),
+        ("global_blur_q_score_normalized", np.mean),
         ("global_blur_action_switch", np.mean),
         ("frame_ablation_q_score_mean", np.mean),
+        ("frame_ablation_q_score_normalized_mean", np.mean),
         ("frame_ablation_action_switch_fraction", np.mean),
     )
     rows = []
@@ -147,11 +150,14 @@ def compare_focal_stage(
         raise ValueError(f"Focal stage missing: {focal_stage}")
     metrics = (
         ("saliency_mean", np.mean),
+        ("saliency_normalized_mean", np.mean),
         ("saliency_entropy_normalized", np.mean),
         ("top_decile_concentration", np.mean),
         ("spatial_action_switch_fraction", np.mean),
         ("global_blur_q_score", np.mean),
+        ("global_blur_q_score_normalized", np.mean),
         ("frame_ablation_q_score_mean", np.mean),
+        ("frame_ablation_q_score_normalized_mean", np.mean),
     )
     rows = []
     stages = sorted(set(state_rows["checkpoint_decisions"]) - {focal_stage})
@@ -277,6 +283,8 @@ def main() -> int:
                 zip(state_ids, states, baseline_q, strict=True)
             ):
                 original_action = int(np.argmax(base_q))
+                sorted_base_q = np.sort(base_q)
+                baseline_q_energy = float(0.5 * np.square(base_q).sum())
                 blurred = blur_state(state, float(config["gaussian_blur_sigma"]))
                 perturbed_q_batches = []
                 for offset in range(0, grid_count, batch_size):
@@ -288,6 +296,7 @@ def main() -> int:
                     )
                 perturbed_q = np.concatenate(perturbed_q_batches)
                 scores = author_q_score(base_q, perturbed_q)
+                normalized_scores = scores / (baseline_q_energy + 1e-12)
                 action_delta = base_q[original_action] - perturbed_q[:, original_action]
                 switches = perturbed_q.argmax(axis=1) != original_action
                 saliency_scores[stage_index, local_index] = scores
@@ -322,19 +331,30 @@ def main() -> int:
                         "state_id": int(state_id),
                         "original_action": original_action,
                         "baseline_max_q": float(base_q.max()),
+                        "baseline_action_margin": float(sorted_base_q[-1] - sorted_base_q[-2]),
+                        "baseline_q_energy": baseline_q_energy,
                         **statistics,
+                        "saliency_normalized_mean": float(normalized_scores.mean()),
+                        "saliency_normalized_p95": float(np.quantile(normalized_scores, 0.95)),
                         "spatial_action_switch_fraction": float(switches.mean()),
                         "spatial_original_action_delta_mean": float(action_delta.mean()),
                         "spatial_original_action_delta_p95": float(
                             np.quantile(action_delta, 0.95)
                         ),
                         "global_blur_q_score": float(global_q_score[stage_index, local_index]),
+                        "global_blur_q_score_normalized": float(
+                            global_q_score[stage_index, local_index] / (baseline_q_energy + 1e-12)
+                        ),
                         "global_blur_original_action_delta": float(
                             global_action_delta[stage_index, local_index]
                         ),
                         "global_blur_action_switch": bool(global_switch[stage_index, local_index]),
                         "frame_ablation_q_score_mean": float(
                             frame_q_score[stage_index, local_index].mean()
+                        ),
+                        "frame_ablation_q_score_normalized_mean": float(
+                            frame_q_score[stage_index, local_index].mean()
+                            / (baseline_q_energy + 1e-12)
                         ),
                         "frame_ablation_action_switch_fraction": float(
                             frame_switch[stage_index, local_index].mean()
@@ -349,6 +369,10 @@ def main() -> int:
                             "frame_channel": channel,
                             "replacement_channel": channel + 1 if channel < 3 else channel - 1,
                             "q_score": float(frame_q_score[stage_index, local_index, channel]),
+                            "q_score_normalized": float(
+                                frame_q_score[stage_index, local_index, channel]
+                                / (baseline_q_energy + 1e-12)
+                            ),
                             "original_action_delta": float(
                                 frame_action_delta[stage_index, local_index, channel]
                             ),

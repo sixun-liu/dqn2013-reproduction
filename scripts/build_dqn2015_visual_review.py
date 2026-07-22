@@ -78,8 +78,8 @@ def render_summary(
     fig, axes = plt.subplots(3, 2, figsize=(14, 12), constrained_layout=True)
 
     errorbar_panel(
-        axes[0, 0], summary, "saliency_mean",
-        title="A. Mean local perturbation Q score", ylabel="0.5 ||Q - Q'||^2", color="#4c72b0"
+        axes[0, 0], summary, "saliency_normalized_mean",
+        title="A. Scale-normalized local Q sensitivity", ylabel="Q score / baseline Q energy", color="#4c72b0"
     )
     errorbar_panel(
         axes[0, 1], summary, "spatial_action_switch_fraction",
@@ -90,19 +90,19 @@ def render_summary(
         title="C. Spatial concentration", ylabel="top-decile score mass", color="#55a868"
     )
     errorbar_panel(
-        axes[1, 1], summary, "global_blur_q_score",
-        title="D. Global-blur positive control", ylabel="0.5 ||Q - Q'||^2", color="#8172b3"
+        axes[1, 1], summary, "global_blur_q_score_normalized",
+        title="D. Scale-normalized global-blur control", ylabel="Q score / baseline Q energy", color="#8172b3"
     )
 
     q_heatmap = frame_rows.pivot_table(
-        index="checkpoint_decisions", columns="frame_channel", values="q_score", aggfunc="mean"
+        index="checkpoint_decisions", columns="frame_channel", values="q_score_normalized", aggfunc="mean"
     ).reindex(stages)
     switch_heatmap = frame_rows.pivot_table(
         index="checkpoint_decisions", columns="frame_channel", values="action_switch", aggfunc="mean"
     ).reindex(stages)
     image = axes[2, 0].imshow(q_heatmap.to_numpy(), aspect="auto", cmap="viridis")
     axes[2, 0].set(
-        title="E. Adjacent-frame replacement Q score",
+        title="E. Scale-normalized frame replacement score",
         xlabel="replaced stack channel (oldest -> newest)",
         ylabel="checkpoint",
         xticks=np.arange(4),
