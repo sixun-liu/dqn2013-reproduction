@@ -228,7 +228,8 @@ def main() -> int:
         state_rng = np.random.default_rng(int(config["state_selection_seed"]))
         formal_ids = np.sort(state_rng.choice(len(all_states), size=formal_count, replace=False))
         state_ids = formal_ids[:state_count]
-        states = all_states[state_ids]
+        formal_states = all_states[formal_ids]
+        states = formal_states[:state_count]
 
         centers, masks = saliency_grid(
             (84, 84), int(config["grid_stride"]), float(config["mask_radius"])
@@ -273,11 +274,16 @@ def main() -> int:
             network = QNetwork(action_count=4).to(device)
             network.load_state_dict(payload["online_network"], strict=True)
             network.eval()
-            baseline_q = infer_q(network, states, device, batch_size)
-            parity_error = float(np.max(np.abs(baseline_q - panel_q[panel_index[stage], state_ids])))
+            # Keep the parity batch identical in smoke and formal runs. CUDA convolution
+            # algorithms can differ by batch shape at around 1e-4 even for fixed weights.
+            formal_baseline_q = infer_q(network, formal_states, device, batch_size)
+            parity_error = float(
+                np.max(np.abs(formal_baseline_q - panel_q[panel_index[stage], formal_ids]))
+            )
             max_panel_parity_error = max(max_panel_parity_error, parity_error)
             if parity_error > 1e-6:
                 raise ValueError(f"EXP-0005 baseline Q parity failed at {stage}: {parity_error}")
+            baseline_q = formal_baseline_q[:state_count]
 
             for local_index, (state_id, state, base_q) in enumerate(
                 zip(state_ids, states, baseline_q, strict=True)
@@ -496,6 +502,7 @@ def main() -> int:
             },
             "checkpoint_stages": stages,
             "state_count": state_count,
+            "parity_state_count": formal_count,
             "state_selection_seed": int(config["state_selection_seed"]),
             "grid_shape": [len(range(0, 84, int(config["grid_stride"]))) ] * 2,
             "grid_count": grid_count,
