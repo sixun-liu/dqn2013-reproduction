@@ -1,0 +1,33 @@
+name: verify
+
+on:
+  push:
+    branches: [main, "release/**"]
+  pull_request:
+
+jobs:
+  test-and-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+      - name: Set up lightweight CPU verification environment
+        env:
+          DQN_ACCEPT_ROM_LICENSE: "1"
+        run: scripts/reproduce.sh setup
+      - name: Unit tests
+        env:
+          OMP_NUM_THREADS: "1"
+          MKL_NUM_THREADS: "1"
+        run: scripts/reproduce.sh test
+      - name: Verify committed reference result
+        run: scripts/reproduce.sh verify-reference
+      - name: CPU smoke
+        env:
+          OMP_NUM_THREADS: "1"
+          MKL_NUM_THREADS: "1"
+        run: scripts/reproduce.sh smoke "${RUNNER_TEMP}/dqn-smoke"

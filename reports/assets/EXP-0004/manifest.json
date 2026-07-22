@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "experiment_id": "EXP-0004",
+  "title": "Nature 2015 DQN Breakout Table 3 single-seed reference package",
+  "files": [
+    {
+      "path": "nature2015_breakout_replication.png",
+      "sha256": "02a791fd2a2bb64d343a20e73dabc6a6be58147e9d15772e3406ec591340a205"
+    },
+    {
+      "path": "summary.json",
+      "sha256": "adf0b291b7584d2d8021db8d3d4b6beffc5b3286c445d73a52602d5b86ffac18"
+    },
+    {
+      "path": "evaluations.csv",
+      "sha256": "4a8759d45a831f51471a2c80987da073f8b3b89989a3491ed57ae7bf70640260"
+    },
+    {
+      "path": "independent_final_eval.json",
+      "sha256": "17e37aa2f62642061f2c1ad70652ee128345a36bbdcabe195ef20ed4c482e8cd"
+    },
+    {
+      "path": "dqn_breakout_demo.gif",
+      "sha256": "89a06e1f7accde0de3e882085c6be39ad42e38b07323aa75e00ade02627b49bd"
+    }
+  ],
+  "expected": {
+    "evaluation_count": 40,
+    "final_mean_episode_return": 350.18333333333334,
+    "reference_score": 316.8,
+    "checkpoint_sha256": "73e3e71f437bf07f59128b712f8a7e294c23052b9d6d5c62cb2478b58d672ef0"
+  },
+  "provenance": {
+    "executor_class": "independent_reimplementation",
+    "training_commit": "d1234d94c106c87d61c6baa3a090a38802a7df76",
+    "result_commit": "f2c15befa075f38d77607ae38564b0a84bde868d",
+    "paper_sha256": "cc811007a48aea14fcc135158ed96d01982930f415045a19f89474bfa1a74eb5",
+    "train_seed": 0,
+    "eval_seed": 10000,
+    "budget_agent_decisions": 10000000,
+    "budget_nominal_emulator_frames": 40000000
+  }
+}
+

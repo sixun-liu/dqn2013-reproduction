@@ -1,0 +1,45 @@
+{
+  "evaluation_count": 40,
+  "evaluation_games_total": 5498,
+  "evaluations_ge_100": 27,
+  "evaluations_ge_200": 16,
+  "evaluations_ge_300": 6,
+  "experiment_id": "EXP-0004",
+  "final_checkpoint": "/root/autodl-tmp/runs/EXP-0004__breakout__s000__10m-dec__20260720T174600Z/checkpoints/decision_0010000000__complete.pt",
+  "final_checkpoint_sha256": "73e3e71f437bf07f59128b712f8a7e294c23052b9d6d5c62cb2478b58d672ef0",
+  "final_mean_episode_return": 350.18333333333334,
+  "final_median_episode_return": 373.5,
+  "heldout_q_count": 199,
+  "heldout_q_final": 3.6711227893829346,
+  "heldout_q_max": 5.43439245223999,
+  "independent_final_eval": {
+    "completed_games": 60,
+    "episode_returns_exact_match": true,
+    "mean_difference": 0.0,
+    "mean_episode_return": 350.18333333333334
+  },
+  "last_five_means": [
+    327.55223880597015,
+    141.0,
+    342.53846153846155,
+    296.3235294117647,
+    350.18333333333334
+  ],
+  "limitations": [
+    "single fixed training seed",
+    "modern Gymnasium/ALE-Py rather than the original ALE stack",
+    "fixed learning rate rather than selecting the best of three rates",
+    "paper raw periodic curve and seed-selection details are unavailable"
+  ],
+  "loss_mean_max": 2.0603039264678955,
+  "mean_abs_td_error_max": 2.1444385051727295,
+  "metrics_sha256": "9aa0a7d07162361a6ede34b1437317b68a5f84af9e7d1b61f81f6ccc7b70c5fd",
+  "optimizer_updates": 2487500,
+  "peak_completed_agent_decisions": 10000000,
+  "peak_mean_episode_return": 350.18333333333334,
+  "peak_relative_difference": 0.10537668350168339,
+  "predicted_q_mean_max": 10.13300609588623,
+  "reference_score": 316.8,
+  "reproduction_kind": "independent_reimplementation",
+  "wall_hours": 7.93396703614129
+}

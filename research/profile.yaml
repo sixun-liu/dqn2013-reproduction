@@ -1,15 +1,24 @@
 schema_version: 1
-domain: paper-reproduction
+domain: rl-mechanism-analysis
 primary_metrics:
-- Nature协议周期评估mean_episode_return及其轨迹peak与316.8参考值的差距
+- 固定状态面板的Q分布、action margin、argmax变化和阶段配对差异。
+- FC512表征的effective rank、linear CKA及其与行为阶段的描述关联。
+- 空间/时间扰动的delta-Q与action-switch概率，以及匹配语义的Q-return calibration gap。
 tail_metrics:
-- held-out mean max-Q、TD误差、末段评估与checkpoint完整性
+- Q与TD相关量的p95/p99、低action-margin比例、最差阶段和失败状态。
+- episode/state分块bootstrap区间、saliency集中度和随机扰动对照。
 forbidden_inputs:
-- 不得把本地2013独立重实现称为DeepMind官方或社区原版
-- 不得把CleanRL默认配置或现代ALE分数直接当作Nature 2015论文真值
-- 不得把DeepMind limited-license源码复制进公开控制仓
-- 不得用单seed结果宣称整篇Nature 2015论文复现
+- 不得把本地2013独立重实现称为DeepMind官方或社区原版。
+- 不得把CleanRL默认配置或现代ALE分数直接当作Nature 2015论文真值。
+- 不得把DeepMind limited-license源码复制进公开控制仓。
+- 不得用单seed结果宣称整篇Nature 2015论文复现。
+- 不得把2013与2015差异解释成Target Network单独因果效应。
+- 不得把t-SNE簇或单张saliency图作为表征质量或策略理解的正式证据。
+- 不得把训练Q与完整游戏raw return直接相减；校准必须匹配reward、terminal与discount语义。
+- 不得把相邻帧当独立样本或把单训练seed的episode方差冒充seed稳定性。
 promotion_gates:
-- 10M单seed完整运行与同坐标图只可支持promising_unresolved；更强主张需要协议等价、多seed和学习率选择证据。
+- 10M单seed完整运行与同坐标图只可支持promising_unresolved；更强复现主张需要协议等价、多seed和学习率选择证据。
+- EXP-0005是diagnostic evidence；只能支持固定seed、固定任务、固定状态/轨迹上的局部描述与干预结论，不支持target因果或跨seed主张。
 review_requirements:
-- 用户查看与316.8同坐标曲线、held-out Q和协议差异表
+- 用户查看与316.8同坐标曲线、held-out Q和协议差异表。
+- 用户查看固定状态价值/表征图、阶段行为图、视觉扰动对照和统计边界说明。

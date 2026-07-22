@@ -5,11 +5,15 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 .ipynb_checkpoints/
+*.egg-info/
+build/
+dist/
 
 # Local environments and secrets
 .env
 .env.*
 .venv/
+.venv-gpu/
 venv/
 
 # Mutable collaborator inboxes
@@ -32,4 +36,3 @@ checkpoints/
 
 # Local tooling
 .DS_Store
-

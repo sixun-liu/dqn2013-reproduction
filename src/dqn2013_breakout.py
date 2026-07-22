@@ -22,7 +22,7 @@ from stable_baselines3.common.buffers import ReplayBuffer
 
 @dataclass
 class Args:
-    output_dir: str = "/root/autodl-tmp/runs/dqn2013_breakout_seed0"
+    output_dir: str = "runs/dqn2013-breakout-seed0"
     env_id: str = "BreakoutNoFrameskip-v4"
     seed: int = 0
     total_steps: int = 2_500_000

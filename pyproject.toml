@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dqn-breakout-reproduction"
+version = "0.1.0"
+description = "Auditable DQN 2013 to Nature 2015 Breakout reproduction"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+license = {file = "LICENSE"}
+authors = [{name = "DQN Reproduction contributors"}]
+dependencies = []
+
+[project.optional-dependencies]
+runtime = [
+  "ale-py==0.8.1",
+  "gymnasium==0.29.1",
+  "matplotlib>=3.8,<4",
+  "numpy>=1.26,<3",
+  "opencv-python-headless>=4.8,<5",
+  "pandas>=2,<3",
+  "scipy>=1.11,<2",
+  "shimmy==1.3.0",
+  "stable-baselines3==2.3.2",
+  "torch>=2.3,<3",
+  "tyro>=0.8,<2",
+]
+atari = [
+  "AutoROM==0.6.1",
+  "AutoROM.accept-rom-license==0.6.1",
+]
+
+[project.urls]
+Repository = "https://github.com/sixun-liu/dqn2013-reproduction"
+
+[tool.setuptools]
+packages = []

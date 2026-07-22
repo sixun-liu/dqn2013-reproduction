@@ -1,0 +1,31 @@
+{
+  "bootstrap_resamples": 2000,
+  "bootstrap_seed": 20260722,
+  "checkpoint_decisions": [
+    9000000,
+    9250000,
+    9500000,
+    10000000
+  ],
+  "discount": 0.99,
+  "experiment_id": "EXP-0006",
+  "expected_wrapper_prefix": [
+    "FrameStack",
+    "GrayScaleObservation",
+    "ResizeObservation",
+    "ClipRewardEnv",
+    "FireResetEnv",
+    "EpisodicLifeEnv",
+    "MaxAndSkipEnv",
+    "NoopResetEnv",
+    "RecordEpisodeStatistics"
+  ],
+  "max_agent_decisions_per_stage": 135000,
+  "post_fire_noop_max": 22,
+  "post_fire_noop_schedule_seed": 31000,
+  "reservoir_states_per_stage": 256,
+  "rollout_seed": 30000,
+  "schema_version": 1,
+  "source_run": "/root/autodl-tmp/runs/EXP-0004__breakout__s000__10m-dec__20260720T174600Z",
+  "target_complete_games_per_stage": 23
+}

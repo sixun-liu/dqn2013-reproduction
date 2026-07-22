@@ -1,6 +1,6 @@
 # DEVLOG
 
-> Updated: 2026-07-21T02:34:37Z
+> Updated: 2026-07-22T05:36:29Z
 > Maintainer: codex
 > Source of truth: decision synthesis linked to research IDs
 
@@ -117,3 +117,65 @@
 - Next: DQN 计算路线在单 seed 部分数值复现处停止；第二 seed 问题 parked，转入 DreamerV3 与双论文交付整合。
 - Approval: human visual review pending
 - Git: frozen runtime@`d1234d9`; result branch@`f2c15be`
+
+## 2026-07-22
+
+### 2026-07-22T03:20:00Z | decision | dqn-offline-mechanism-exploration
+
+- Actor: user, codex
+- Summary: 项目从 Nature 单 seed 结果复现进入 exploration；冻结 EXP-0004 为唯一 baseline，优先复用 40 个 checkpoint、500 个固定状态和评估轨迹建立价值、表征、视觉敏感性与行为的离线局部证据。
+- Evidence: `references/DQN_OFFLINE_ANALYSIS_PROTOCOL.md`；六篇 primary PDF hash；Claude 两份 `internal_synthesis` ingestion manifest。
+- Next: 创建 EXP-0005 probe，并先通过 fixed-state Q/FC512 panel 的 known-answer 与 held-out-Q parity。
+- Approval: user
+- Git: branch `exp/EXP-0005-dqn-offline-atlas`; baseline runtime `d1234d9`
+
+### 2026-07-22T03:55:59Z | result | EXP-0005
+
+- Actor: codex
+- Summary: 40 x 500 固定状态 Q/FC512 面板通过零误差 parity；Q 绝对尺度不是行为质量的充分
+  代理，`9.25M` 的高 Q、低 margin、低回报异常把下一轮从平均六阶段收敛到四个局部阶段。
+- Evidence: EVT-0034--EVT-0038, ART-0028；原始阶段 rho(max-Q/margin/CKA)=
+  `0.846/0.850/0.861`，一阶差分为 `0.056/0.317/0.085`。
+- Next: 用 `9.0M/9.25M/9.5M/10M` 的匹配训练语义 calibration trajectory 区分 Q 尺度尖峰、
+  状态访问与评估方差；信号通过后才做视觉干预。
+- Approval: user approved autonomous work; human visual review pending
+- Git: extraction freeze@`c88f828`; post-run atlas@`73f8a43`
+
+### 2026-07-22T04:47:24Z | route_closed | EXP-0006--EXP-0007
+
+- Actor: codex
+- Summary: 匹配训练语义的纯 greedy calibration 两级成本门均未形成四阶段共同面板；9.5M 在
+  300K decisions 内仅完成17/23局，按预注册停止重试，所有部分 Q-G trace 排除。
+- Evidence: EVT-0039--EVT-0048；失败现场 `EXP-0006-failed-*`、`EXP-0007-failed-cap300k`。
+- Next: Q-G 保持 unknown；转向固定状态四帧消融与作者公式 blur perturbation。
+- Approval: user approved autonomous work; no human review required for failed completion signal
+- Git: EXP-0007 freeze@`c3058b2`
+
+### 2026-07-22T04:50:00Z | decision | author-interpretability-code
+
+- Actor: user, codex
+- Summary: 优先参考作者开源实现。Greydanus `182492d` 为当前视觉干预公式 oracle；AtariARI
+  `a06f52c` parked；Atrey `500aefc` 因无 license 文件与 Toybox 依赖仅只读参考。
+- Evidence: `references/surveys/DQN_EVAL_OPENREF_AUDIT.md`、`references/IMPLEMENTATION_LEDGER.md`。
+- Next: 现代化 Greydanus `r=5,d=5,sigma=3` 批处理接口并先做单状态 parity。
+- Approval: user
+
+### 2026-07-22T05:28:49Z | result | EXP-0008
+
+- Actor: codex
+- Summary: Greydanus 作者方法的 `4 checkpoints x 128 states x 289 masks` 干预通过 parity；
+  9.25M 的 local/global/frame 敏感度未高于三个对照，广泛视觉脆弱假说判为 `negative`。
+- Evidence: EVT-0051--EVT-0058, ART-0029, ART-0031；9.25M local switch 配对差区间均跨 0，
+  但 mean margin 最低、top-decile spatial concentration 最高。
+- Next: 先合并 EXP-0004/0005/0008 为同一四阶段证据图，再决定 margin 匹配或对象/RAM probe。
+- Approval: human visual review pending
+- Git: extraction freeze@`e33f000`; review@`77eff19`
+
+### 2026-07-22T05:36:29Z | synthesis | C-0001
+
+- Actor: codex
+- Summary: 将 EXP-0004 行为、EXP-0005 Q/FC512 与 EXP-0008 视觉干预按四个共同 checkpoint
+  合并；9.25M 的局部异常固定为高 Q、低 margin、低 CKA/rank、低扰动幅度和高空间集中度共现。
+- Evidence: `ART-0032`, `C-0001`；输入/output hash 与生成脚本 commit `460a0d2` 已入 manifest。
+- Next: 用户复核后只在 margin 匹配、对象/RAM probe、Target Network 消融中选择一条新路线。
+- Approval: human visual review pending

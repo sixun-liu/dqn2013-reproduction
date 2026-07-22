@@ -56,7 +56,7 @@ DEEPMIND_DQN_COMMIT = "9d9b1d13a2b491d6ebd4d046740c511c662bbe0f"
 @dataclass(frozen=True)
 class Args:
     config_schema_version: int = CONFIG_SCHEMA_VERSION
-    output_dir: str = "/root/autodl-tmp/runs/EXP-0004__breakout__s000__10m-dec"
+    output_dir: str = "runs/nature2015-breakout"
     env_id: str = "BreakoutNoFrameskip-v4"
     train_seed: int = 0
     eval_seed: int = 10_000
