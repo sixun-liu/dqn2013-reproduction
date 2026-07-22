@@ -1,6 +1,6 @@
 schema_version: 4
 project_id: dqn2013-breakout-reproduction
-updated_at: '2026-07-22T03:44:19Z'
+updated_at: '2026-07-22T03:45:04Z'
 updated_by: codex
 approved_by: user
 language: zh-CN
@@ -28,7 +28,7 @@ repository_manifest: research/repositories.yaml
 canonical_repo:
   path: /root/autodl-tmp/dqn-reproduction
   branch: exp/EXP-0005-dqn-offline-atlas
-  commit: c3af57016e09533316ea8b59b31e7f0b8ab1cdc8
+  commit: c88f828d2ab61cab61e7217f0e8fb3c1b225c1a5
   tracked_clean_at_snapshot: true
 human_review:
   root: /root/autodl-tmp/artifacts/dqn2013/review
