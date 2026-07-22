@@ -13,12 +13,15 @@ from pathlib import Path
 os.environ.setdefault("MPLBACKEND", "Agg")
 
 import matplotlib.pyplot as plt
+from matplotlib.colors import LogNorm
 import numpy as np
 import pandas as pd
+from scipy.stats import spearmanr
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.dqn2015_calibration import bootstrap_interval, paired_bootstrap_difference
 from src.dqn2015_offline_analysis import sha256_file
 
 
@@ -41,6 +44,18 @@ def atomic_json(path: Path, value: object) -> None:
     os.replace(temporary, path)
 
 
+def atomic_text(path: Path, value: str) -> None:
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(value, encoding="utf-8")
+    os.replace(temporary, path)
+
+
+def atomic_csv(path: Path, frame: pd.DataFrame) -> None:
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    frame.to_csv(temporary, index=False)
+    os.replace(temporary, path)
+
+
 def errorbar_panel(
     ax: plt.Axes,
     summary: pd.DataFrame,
@@ -49,6 +64,7 @@ def errorbar_panel(
     title: str,
     ylabel: str,
     color: str,
+    log_scale: bool = False,
 ) -> None:
     x = summary["checkpoint_decisions"].to_numpy() / 1_000_000
     center = summary[metric].to_numpy()
@@ -65,6 +81,99 @@ def errorbar_panel(
     )
     ax.axvline(9.25, color="#dd8452", linestyle="--", alpha=0.6)
     ax.set(title=title, xlabel="checkpoint decisions (M)", ylabel=ylabel)
+    if log_scale:
+        ax.set_yscale("log")
+
+
+def build_stage_controls(
+    state_rows: pd.DataFrame,
+    *,
+    resamples: int,
+    seed: int,
+) -> pd.DataFrame:
+    rows = []
+    for stage_index, (stage, frame) in enumerate(
+        state_rows.groupby("checkpoint_decisions", sort=True)
+    ):
+        margin, margin_low, margin_high = bootstrap_interval(
+            frame["baseline_action_margin"].to_numpy(),
+            estimator=np.mean,
+            resamples=resamples,
+            seed=seed + stage_index,
+        )
+        rho = spearmanr(
+            frame["baseline_action_margin"],
+            frame["spatial_action_switch_fraction"],
+        ).statistic
+        rows.append(
+            {
+                "checkpoint_decisions": int(stage),
+                "baseline_action_margin": margin,
+                "baseline_action_margin_ci95_low": margin_low,
+                "baseline_action_margin_ci95_high": margin_high,
+                "margin_switch_spearman": float(rho),
+                "baseline_q_energy_min": float(frame["baseline_q_energy"].min()),
+                "baseline_q_energy_p01": float(
+                    frame["baseline_q_energy"].quantile(0.01)
+                ),
+                "baseline_q_energy_median": float(frame["baseline_q_energy"].median()),
+                "saliency_normalized_median": float(
+                    frame["saliency_normalized_mean"].median()
+                ),
+                "saliency_normalized_p95_across_states": float(
+                    frame["saliency_normalized_mean"].quantile(0.95)
+                ),
+                "saliency_normalized_max": float(
+                    frame["saliency_normalized_mean"].max()
+                ),
+                "saliency_to_q_energy_ratio_of_means": float(
+                    frame["saliency_mean"].mean() / frame["baseline_q_energy"].mean()
+                ),
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def build_focal_margin_comparisons(
+    state_rows: pd.DataFrame,
+    *,
+    focal_stage: int,
+    resamples: int,
+    seed: int,
+) -> pd.DataFrame:
+    focal = state_rows.loc[
+        state_rows["checkpoint_decisions"] == focal_stage
+    ].sort_values("state_id")
+    rows = []
+    comparison_stages = sorted(
+        set(state_rows["checkpoint_decisions"].astype(int)) - {focal_stage}
+    )
+    for stage_index, stage in enumerate(comparison_stages):
+        comparison = state_rows.loc[
+            state_rows["checkpoint_decisions"] == stage
+        ].sort_values("state_id")
+        if not np.array_equal(
+            focal["state_id"].to_numpy(), comparison["state_id"].to_numpy()
+        ):
+            raise ValueError(f"State pairing failed for {focal_stage} vs {stage}")
+        difference, low, high = paired_bootstrap_difference(
+            focal["baseline_action_margin"].to_numpy(),
+            comparison["baseline_action_margin"].to_numpy(),
+            estimator=np.mean,
+            resamples=resamples,
+            seed=seed + stage_index,
+        )
+        rows.append(
+            {
+                "focal_checkpoint_decisions": focal_stage,
+                "comparison_checkpoint_decisions": stage,
+                "paired_state_count": len(focal),
+                "baseline_action_margin_focal_minus_comparison": difference,
+                "baseline_action_margin_difference_ci95_low": low,
+                "baseline_action_margin_difference_ci95_high": high,
+            }
+        )
+    return pd.DataFrame(rows)
 
 
 def render_summary(
@@ -79,19 +188,21 @@ def render_summary(
 
     errorbar_panel(
         axes[0, 0], summary, "saliency_normalized_mean",
-        title="A. Scale-normalized local Q sensitivity", ylabel="Q score / baseline Q energy", color="#4c72b0"
+        title="A. Scale-normalized local Q sensitivity", ylabel="Q score / baseline Q energy", color="#4c72b0",
+        log_scale=True,
     )
     errorbar_panel(
         axes[0, 1], summary, "spatial_action_switch_fraction",
         title="B. Local perturbation action switches", ylabel="grid-cell switch fraction", color="#c44e52"
     )
     errorbar_panel(
-        axes[1, 0], summary, "top_decile_concentration",
-        title="C. Spatial concentration", ylabel="top-decile score mass", color="#55a868"
+        axes[1, 0], summary, "baseline_action_margin",
+        title="C. Baseline action margin", ylabel="top-1 minus top-2 Q", color="#55a868"
     )
     errorbar_panel(
         axes[1, 1], summary, "global_blur_q_score_normalized",
-        title="D. Scale-normalized global-blur control", ylabel="Q score / baseline Q energy", color="#8172b3"
+        title="D. Scale-normalized global-blur control", ylabel="Q score / baseline Q energy", color="#8172b3",
+        log_scale=True,
     )
 
     q_heatmap = frame_rows.pivot_table(
@@ -100,7 +211,16 @@ def render_summary(
     switch_heatmap = frame_rows.pivot_table(
         index="checkpoint_decisions", columns="frame_channel", values="action_switch", aggfunc="mean"
     ).reindex(stages)
-    image = axes[2, 0].imshow(q_heatmap.to_numpy(), aspect="auto", cmap="viridis")
+    q_values = q_heatmap.to_numpy()
+    positive = q_values[q_values > 0]
+    if len(positive) == 0:
+        raise ValueError("Frame replacement scores must contain a positive value")
+    image = axes[2, 0].imshow(
+        q_values,
+        aspect="auto",
+        cmap="viridis",
+        norm=LogNorm(vmin=float(positive.min()), vmax=float(positive.max())),
+    )
     axes[2, 0].set(
         title="E. Scale-normalized frame replacement score",
         xlabel="replaced stack channel (oldest -> newest)",
@@ -141,6 +261,12 @@ def render_contact_sheet(
     stages: list[int],
     output: Path,
 ) -> None:
+    grid_side = int(round(np.sqrt(saliency_scores.shape[-1])))
+    if grid_side * grid_side != saliency_scores.shape[-1]:
+        raise ValueError(f"Saliency grid is not square: {saliency_scores.shape}")
+    saliency_maps = saliency_scores.reshape(
+        *saliency_scores.shape[:-1], grid_side, grid_side
+    )
     review_count = min(6, len(state_ids))
     fig, axes = plt.subplots(
         review_count,
@@ -152,13 +278,13 @@ def render_contact_sheet(
         axes = axes[None]
     for row in range(review_count):
         latest = states[row, -1]
-        row_max = float(saliency_scores[:, row].max())
+        row_max = float(saliency_maps[:, row].max())
         axes[row, 0].imshow(latest, cmap="gray", vmin=0, vmax=255)
         axes[row, 0].set_ylabel(f"state {int(state_ids[row])}")
         for column, stage in enumerate(stages, 1):
             axes[row, column].imshow(latest, cmap="gray", vmin=0, vmax=255)
             axes[row, column].imshow(
-                saliency_scores[column - 1, row],
+                saliency_maps[column - 1, row],
                 cmap="inferno",
                 alpha=0.62,
                 vmin=0,
@@ -173,7 +299,8 @@ def render_contact_sheet(
     for column, stage in enumerate(stages, 1):
         axes[0, column].set_title(f"{stage / 1_000_000:g}M saliency")
     fig.suptitle(
-        "Result-blind fixed state IDs | Greydanus blur perturbation overlays", fontsize=14
+        "Result-blind fixed state IDs | Raw Greydanus Q-score | row-shared scale",
+        fontsize=14,
     )
     temporary = output.with_suffix(".tmp.png")
     fig.savefig(temporary, dpi=180, facecolor="white")
@@ -195,9 +322,11 @@ def main() -> int:
     summary = pd.read_csv(input_dir / "stage_summary.csv")
     comparisons = pd.read_csv(input_dir / "stage_comparisons.csv")
     frame_rows = pd.read_csv(input_dir / "frame_interventions.csv")
+    state_rows = pd.read_csv(input_dir / "state_summary.csv")
     state_ids = np.load(input_dir / "selected_state_ids.npy", allow_pickle=False)
     saliency_scores = np.load(input_dir / "saliency_scores.npy", allow_pickle=False)
     manifest = json.loads((input_dir / "source_manifest.json").read_text(encoding="utf-8"))
+    config = json.loads(Path(manifest["inputs"]["config"]["path"]).read_text(encoding="utf-8"))
     all_states = np.load(
         manifest["inputs"]["heldout_states"]["path"], allow_pickle=False
     )
@@ -205,11 +334,45 @@ def main() -> int:
     stages = [int(value) for value in completed["checkpoint_stages"]]
     if saliency_scores.shape[:2] != (len(stages), len(state_ids)):
         raise ValueError(f"Saliency shape drift: {saliency_scores.shape}")
+    controls = build_stage_controls(
+        state_rows,
+        resamples=int(config["bootstrap_resamples"]),
+        seed=int(config["bootstrap_seed"]) + 20_000,
+    )
+    margin_comparisons = build_focal_margin_comparisons(
+        state_rows,
+        focal_stage=9_250_000,
+        resamples=int(config["bootstrap_resamples"]),
+        seed=int(config["bootstrap_seed"]) + 30_000,
+    )
+    summary = summary.merge(controls, on="checkpoint_decisions", validate="one_to_one")
 
     summary_figure = output_dir / f"{experiment_id}_visual_summary.png"
     contact_figure = output_dir / f"{experiment_id}_saliency_contact_sheet.png"
+    controls_table = output_dir / f"{experiment_id}_stage_controls.csv"
+    margin_comparisons_table = output_dir / f"{experiment_id}_margin_comparisons.csv"
+    review_readme = output_dir / "README.md"
     render_summary(summary, frame_rows, summary_figure)
     render_contact_sheet(states, state_ids, saliency_scores, stages, contact_figure)
+    atomic_csv(controls_table, controls)
+    atomic_csv(margin_comparisons_table, margin_comparisons)
+    atomic_text(
+        review_readme,
+        "\n".join(
+            [
+                f"# {experiment_id} Review",
+                "",
+                f"- 六面板汇总：`{summary_figure.name}`",
+                f"- 固定状态显著图：`{contact_figure.name}`",
+                f"- margin 与归一化诊断：`{controls_table.name}`",
+                f"- 9.25M 配对 margin 比较：`{margin_comparisons_table.name}`",
+                "- 原始机器表：`/root/autodl-tmp/artifacts/dqn2013/EXP-0008/`",
+                "",
+                "证据权限：diagnostic only；人工确认：pending。",
+                "",
+            ]
+        ),
+    )
 
     source_path = Path(__file__).resolve()
     input_paths = [
@@ -217,6 +380,7 @@ def main() -> int:
         input_dir / "source_manifest.json",
         input_dir / "stage_summary.csv",
         input_dir / "stage_comparisons.csv",
+        input_dir / "state_summary.csv",
         input_dir / "frame_interventions.csv",
         input_dir / "selected_state_ids.npy",
         input_dir / "saliency_scores.npy",
@@ -243,7 +407,13 @@ def main() -> int:
                 "bytes": path.stat().st_size,
                 "sha256": sha256_file(path),
             }
-            for path in (summary_figure, contact_figure)
+            for path in (
+                summary_figure,
+                contact_figure,
+                controls_table,
+                margin_comparisons_table,
+                review_readme,
+            )
         },
     }
     atomic_json(output_dir / "review_manifest.json", review_manifest)
@@ -253,6 +423,8 @@ def main() -> int:
         "state_count": len(state_ids),
         "stage_summary": summary.to_dict(orient="records"),
         "focal_comparisons": comparisons.to_dict(orient="records"),
+        "stage_controls": controls.to_dict(orient="records"),
+        "focal_margin_comparisons": margin_comparisons.to_dict(orient="records"),
         "summary_figure": str(summary_figure),
         "contact_sheet": str(contact_figure),
     }
