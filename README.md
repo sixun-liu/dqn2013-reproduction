@@ -1,6 +1,5 @@
 # DQN 2013 到 Nature 2015 Breakout 复现
 
-[![verify](https://github.com/sixun-liu/dqn2013-reproduction/actions/workflows/verify.yml/badge.svg)](https://github.com/sixun-liu/dqn2013-reproduction/actions/workflows/verify.yml)
 [![license: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 本仓库提供一套可审计、可验证的 DQN Breakout 独立复现：先保留 2013 arXiv 版本的实现与失败分析，
@@ -103,6 +102,10 @@ runs/<tag>/
 ```
 
 即可检查所有公开结果文件的 SHA256、40 点曲线、headline 数值和 checkpoint 指纹。
+
+CPU CI 配置保存在 [ci/github-actions-verify.yml](ci/github-actions-verify.yml)。当前发布凭据没有
+GitHub `workflow` scope，因此它作为可直接启用的模板随仓库发布；使用具备该权限的凭据移动到
+`.github/workflows/verify.yml` 后即可启用。
 
 ## 方法与实现
 

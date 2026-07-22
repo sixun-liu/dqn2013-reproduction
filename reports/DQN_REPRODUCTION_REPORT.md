@@ -335,9 +335,10 @@ action margin 和 FC512 对齐同时回撤。
 - `eval` 验证 Release checkpoint；
 - `full` 从头重跑 10M decisions。
 
-GitHub Actions 在 CPU runner 上安装 ROM 后执行 unit tests、reference verification 和 smoke。公开结果
-包包含曲线、40 点 CSV、summary、独立复评和 source manifest；final checkpoint 作为 GitHub Release
-asset 单独发布，ROM 不进入仓库。
+仓库提供 GitHub Actions CPU 模板，用于安装 ROM 后执行 unit tests、reference verification 和
+smoke。当前发布凭据缺少 `workflow` scope，因此模板保存在 `ci/`，尚未激活为仓库 workflow；这不
+影响本地一键验证。公开结果包包含曲线、40 点 CSV、summary、独立复评和 source manifest；final
+checkpoint 作为 GitHub Release asset 单独发布，ROM 不进入仓库。
 
 ## 12. 结论
 
@@ -365,4 +366,3 @@ seed，而不是继续围绕单 seed 曲线形状调参。
 - CleanRL reference：`fe8d8a03c41a7ef5b523e2e354bd01c363e786bb`
 - Public result manifest：[`assets/EXP-0004/manifest.json`](assets/EXP-0004/manifest.json)
 - 完整协议审计：[`../references/NATURE2015_PROTOCOL_AUDIT.md`](../references/NATURE2015_PROTOCOL_AUDIT.md)
-

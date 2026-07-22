@@ -206,6 +206,10 @@ GPU driver、CUDA wheel 和 Atari ROM 许可证仍需要主机侧处理。当前
 
 ## 10. 证据边界
 
+CPU CI 模板位于 [ci/github-actions-verify.yml](ci/github-actions-verify.yml)，包含依赖安装、AutoROM、
+unit tests、reference verification 和 smoke。当前发布凭据缺少 GitHub `workflow` scope，因此模板
+尚未激活为 `.github/workflows/`；本地一键验证不受影响。
+
 本项目是 `independent_reimplementation`，不是作者原始代码复跑。`350.18` 支持 Breakout 单 seed
 进入论文 Table 3 分数量级，不支持完整复现 49 个游戏、多 seed 统计等价或 Target Network 的本地
 单因素因果结论。详细说明见 [复现报告](reports/DQN_REPRODUCTION_REPORT.md)。
