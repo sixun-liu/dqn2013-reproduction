@@ -40,7 +40,17 @@ class ReleaseReproducibilityTests(unittest.TestCase):
             with self.assertRaisesRegex(FileNotFoundError, "missing run files"):
                 verify(Path(directory), "smoke")
 
+    def test_default_setup_is_cpu_only_and_gpu_setup_is_explicit(self):
+        launcher = (self.repo_root / "scripts/reproduce.sh").read_text()
+        self.assertIn('DQN_CPU_TORCH_INDEX_URL', launcher)
+        self.assertIn('--index-url "$torch_index_url"', launcher)
+        self.assertIn('if [[ -z ${DQN_TORCH_INDEX_URL:-} ]]', launcher)
+        self.assertIn('--device "${DQN_EVAL_DEVICE:-cpu}"', launcher)
+        self.assertIn('.venv-gpu', launcher)
+        pyproject = (self.repo_root / "pyproject.toml").read_text()
+        self.assertIn("dependencies = []", pyproject)
+        self.assertIn("runtime = [", pyproject)
+
 
 if __name__ == "__main__":
     unittest.main()
-

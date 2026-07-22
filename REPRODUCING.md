@@ -31,7 +31,8 @@ cd dqn2013-reproduction
 DQN_ACCEPT_ROM_LICENSE=1 ./scripts/reproduce.sh setup
 ```
 
-脚本创建 `.venv`，执行 editable install，并运行 AutoROM。仓库不会自动代表用户接受 ROM 许可证，
+脚本创建 CPU-only `.venv`，先从 PyTorch 官方 CPU wheel index 安装 PyTorch，再执行 editable
+install 和 AutoROM。该默认路径不会下载 CUDA runtime。仓库不会自动代表用户接受 ROM 许可证，
 没有显式设置 `DQN_ACCEPT_ROM_LICENSE=1` 时会停止。
 
 若已经有兼容环境，可避免新建 venv：
@@ -41,9 +42,8 @@ export DQN_PYTHON=/path/to/python
 ./scripts/reproduce.sh test
 ```
 
-CUDA build 与显卡驱动相关。默认依赖允许 PyTorch `>=2.3,<3`；需要尽量恢复本机执行栈时，先按
-PyTorch 官方方式安装与硬件匹配的 2.13.0 CUDA wheel，再安装
-`requirements/verified.txt` 中其余依赖。
+CUDA build 与显卡驱动相关，因此不属于默认验证安装。`requirements/verified.txt` 只记录产生
+EXP-0004 的完整版本，不应直接当作跨机器安装命令。
 
 ## 3. 单元测试
 
@@ -51,7 +51,7 @@ PyTorch 官方方式安装与硬件匹配的 2.13.0 CUDA wheel，再安装
 ./scripts/reproduce.sh test
 ```
 
-发布版包含 31 项测试，至少覆盖：
+发布版包含 32 项测试，至少覆盖：
 
 - Nature 网络输出尺寸和 `1,686,180` 参数量；
 - centered RMSProp 一步更新公式；
@@ -112,10 +112,11 @@ sha256sum -c reports/assets/EXP-0004/checkpoint.sha256
 ./scripts/reproduce.sh eval dqn2015-breakout-exp0004-s0-10m.pt
 ```
 
-默认使用 CUDA。CPU 评估可用：
+默认使用 CPU，避免为了复评 checkpoint 安装数 GB 的 CUDA runtime。已有 GPU 环境时可显式启用：
 
 ```bash
-DQN_EVAL_DEVICE=cpu ./scripts/reproduce.sh eval dqn2015-breakout-exp0004-s0-10m.pt
+DQN_PYTHON=.venv-gpu/bin/python DQN_EVAL_DEVICE=cuda \
+  ./scripts/reproduce.sh eval dqn2015-breakout-exp0004-s0-10m.pt
 ```
 
 评估器固定：
@@ -132,6 +133,19 @@ DQN_EVAL_DEVICE=cpu ./scripts/reproduce.sh eval dqn2015-breakout-exp0004-s0-10m.
 跨版本时报告差异，不应为匹配单个数字替换 seed 或 checkpoint。
 
 ## 7. 从头运行 10M-decision 复现
+
+先从 PyTorch 官方安装器选择与本机驱动匹配的 CUDA wheel index，再显式创建独立 GPU 环境：
+
+```bash
+DQN_ACCEPT_ROM_LICENSE=1 \
+DQN_TORCH_INDEX_URL=https://download.pytorch.org/whl/cu130 \
+  ./scripts/reproduce.sh setup-gpu
+```
+
+`cu130` 是 EXP-0004 主机所用版本的示例，其他主机应替换成 PyTorch 官方安装器给出的 index。
+这一步会下载较大的 GPU 依赖并创建 `.venv-gpu`；只有从头训练需要它。仓库本身不保存 CUDA、
+PyTorch wheel、ROM 或训练 checkpoint。裸 `pip install -e .` 也不会安装运行时依赖；这是有意设计，
+请使用上述 setup 命令，或在自管环境中显式安装 `.[runtime,atari]`。
 
 ```bash
 ./scripts/reproduce.sh full
@@ -192,8 +206,8 @@ python -c "import gymnasium as gym; gym.make('BreakoutNoFrameskip-v4').close()"
 
 ### CUDA 不可用
 
-Smoke 总是 CPU。正式训练需要安装与驱动匹配的 CUDA PyTorch；launcher 在 `--device cuda` 不可用时
-会直接失败，不会静默退回 CPU 长跑。
+Smoke 和默认 checkpoint 复评均使用 CPU。正式训练需要先执行显式 `setup-gpu`；launcher 在
+`--device cuda` 不可用时会直接失败，不会静默退回 CPU 长跑。
 
 ### 输出目录已经存在
 

@@ -322,10 +322,12 @@ action margin 和 FC512 对齐同时回撤。
 公开仓库提供四级验证：
 
 ```bash
+DQN_ACCEPT_ROM_LICENSE=1 ./scripts/reproduce.sh setup  # CPU-only
 ./scripts/reproduce.sh test
 ./scripts/reproduce.sh smoke
 ./scripts/reproduce.sh verify-reference
 ./scripts/reproduce.sh eval <checkpoint>
+# 仅从头训练前，显式执行 setup-gpu
 ./scripts/reproduce.sh full
 ```
 
@@ -334,6 +336,10 @@ action margin 和 FC512 对齐同时回撤。
 - `verify-reference` 检查公开证据哈希与 headline 数值；
 - `eval` 验证 Release checkpoint；
 - `full` 从头重跑 10M decisions。
+
+默认安装、测试、smoke 和 checkpoint 复评均不需要 CUDA。GPU wheel 与主机驱动相关且体积较大，
+只在用户通过 `setup-gpu` 明确选择官方 CUDA wheel index 后安装到独立 `.venv-gpu`；仓库不分发
+CUDA、ROM 或训练 checkpoint。
 
 仓库提供 GitHub Actions CPU 模板，用于安装 ROM 后执行 unit tests、reference verification 和
 smoke。当前发布凭据缺少 `workflow` scope，因此模板保存在 `ci/`，尚未激活为仓库 workflow；这不

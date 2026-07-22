@@ -26,7 +26,7 @@ DQN_ACCEPT_ROM_LICENSE=1 ./scripts/reproduce.sh setup
 ./scripts/reproduce.sh verify-reference
 ```
 
-`setup` 会创建 `.venv` 并安装依赖。Atari ROM 不在本仓库中；设置
+`setup` 会创建 CPU-only `.venv` 并安装验证所需依赖，不下载 CUDA wheel。Atari ROM 不在本仓库中；设置
 `DQN_ACCEPT_ROM_LICENSE=1` 表示调用者已阅读并接受 AutoROM 提供的独立 ROM 许可证。
 
 成功的 smoke 应完成：
@@ -57,8 +57,15 @@ sha256sum -c reports/assets/EXP-0004/checkpoint.sha256
 ## 从头运行正式复现
 
 ```bash
+DQN_ACCEPT_ROM_LICENSE=1 \
+DQN_TORCH_INDEX_URL=https://download.pytorch.org/whl/cu130 \
+  ./scripts/reproduce.sh setup-gpu
 ./scripts/reproduce.sh full
 ```
+
+GPU 环境单独安装到 `.venv-gpu`。CUDA wheel 较大且与驱动/显卡有关，因此仓库不捆绑 CUDA，
+也不会在默认验证路径中隐式下载它；上面的 `cu130` 是 EXP-0004 主机示例，其他主机应从
+PyTorch 官方安装器选择匹配的 index。
 
 正式配置为 [configs/public/nature2015_table3_10m.json](configs/public/nature2015_table3_10m.json)，
 与冻结的 EXP-0004 formal config 除输出路径外逐字段相同。本机 RTX 5090 运行约 `7.93h`；ALE、
@@ -121,7 +128,7 @@ Nature 2015 执行器位于 [src/dqn2015_nature_breakout.py](src/dqn2015_nature_
 
 公开 JSON config 由 [scripts/run_nature2015_config.py](scripts/run_nature2015_config.py) 直接消费，
 checkpoint 由 [scripts/evaluate_dqn2015_checkpoint.py](scripts/evaluate_dqn2015_checkpoint.py) 独立评估。
-31 项单元测试覆盖网络尺寸、optimizer 一步公式、TD 梯度、epsilon、训练边界、Target Network、
+32 项单元测试覆盖网络尺寸、optimizer 一步公式、TD 梯度、epsilon、训练边界、Target Network、
 wrapper、checkpoint、离线统计和发布配置 parity。
 
 完整方法、代码走读、协议、结果与限制见

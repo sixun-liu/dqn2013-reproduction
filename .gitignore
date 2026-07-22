@@ -13,6 +13,7 @@ dist/
 .env
 .env.*
 .venv/
+.venv-gpu/
 venv/
 
 # Mutable collaborator inboxes
